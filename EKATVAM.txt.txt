@@ -1,0 +1,89 @@
+--------------------------------------------------------------------------------------------
+1.
+
+CREATE TABLE Streams
+   (Stream_name VARCHAR2(20) CONSTRAINT c_pk_streams_name PRIMARY KEY,
+     Stream_id NUMBER(20)
+      );
+
+ CREATE TABLE Subjects
+   ( stream_name Varchar2(20) CONSTRAINT c_fk_subjects_strid REFERENCES Streams(Stream_name),
+     vocational_sub varchar2(10)
+     );
+
+CREATE TABLE Admsn_form
+ (Name VARCHAR2(10) CONSTRAINT c_pk_Admsn_name PRIMARY KEY,
+  Address VARCHAR2(50),
+  Contact NUMBER(10),
+  SSC NUMBER(10,2) NOT NULL,
+  HSC NUMBER(10,2) NOT NULL,
+  Stream_name VARCHAR2(20) REFERENCES Streams(Stream_name)
+  );
+ 
+  CREATE TABLE Student
+  (applicant_id NUMBER(20) PRimary key,
+   Name VARCHAR2(10) REFERENCES Admsn_form(Name)
+   );
+
+   
+  
+  
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------
+2.
+
+SELECT * FROM CUSTOMER WHERE CONTACT IS NULL;
+
+---------------------------------------------------------------------------------------------------------------
+3.
+
+SELECT * from incident where to_char(report_time,'DD')>=(to_char(sysdate,'DD')-7);
+
+---------------------------------------------------------------------------------------------------------------
+4.
+
+SELECT incident_id,cust_id,report_time,assigned_to_emp,work_info,status from INCIDENT where status='Resolved';
+
+---------------------------------------------------------------------------------------------------------------
+5.
+
+select distinct i.cust_id, c.name from customer c join incident i on c.cust_id = i.cust_id;
+
+
+----------------------------------------------------------------------------------------------------------------
+6.
+
+SELECT c.name, COUNT(incident_id) as Total_incidents from customer c, incident i where c.cust_id=i.cust_id;
+
+-----------------------------------------------------------------------------------------------------------------------
+7.
+
+SELECT f.feedback_comment from incident_feedback f, customer c, incident i where i.incident_id=f.incident_id and c.cust_id=i.cust_id and c.name='Anand Chavda';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.
+
+select i.cust_id,i.incident_id from incident i left join incident_feedback f on i.incident_id=f.incident_id where feedback_comment is null;
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+9.
+An index is a database object which contains the values of the indexed columns in the ascending order,
+along with the address of each row.
+
+INDEX in database are used for two purposes:
+
+	1) For the fast retrieval of the data and thereby improving the performance of the query.
+	2) To enforce uniqueness.
+
+-----------------------------------------------------------------------------------------------------------------------
+10.
+ 
+Redo Log files are used in failure recovery. 
+All the changes that are made to the database will be written to the redo log file.
+
+-----------------------------------------------------------------------------------------------------------------

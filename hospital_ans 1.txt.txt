@@ -1,0 +1,204 @@
+1)Display total amount of bill received by hospital
+
+
+SQL> select sum(total_bill_amt) from patient;
+
+SUM(TOTAL_BILL_AMT)
+-------------------
+             133560
+*****************************************************************************************
+2)  select p.patient_id,p.patient_name,p.enrollment_dt,t.test_name,pl.observations,d.doctor_id from patient p,test t,doctors d,patient_log pl 
+where p.patient_id=pl.patient_id and d.doctor_id=t.doctor_id and t.test_id=pl.test_id;
+
+
+PATIENT_ID PATIENT_NAME         ENROLLMEN TEST_NAME
+---------- -------------------- --------- --------------------
+OBSERVATIONS                                        DOCTOR_ID
+-------------------------------------------------- ----------
+       101 sai                  15-JUN-16 ecg
+problem                                                    78
+
+************************************************************************************************************
+3) select doctor_id,count(1) from test group by doctor_id;
+
+
+ DOCTOR_ID   COUNT(1)
+---------- ----------
+        78          1
+       123          2
+       100          1
+        20          2
+      1234          1
+        33          1
+        67          2
+***************************************************************************************************
+4) select * from patient where months_between(discharge_dt,enrollment_dt) >1;
+
+PATIENT_ID PATIENT_NAME         ADDRESS                              PHONE_NUM
+---------- -------------------- ----------------------------------- ----------
+ENROLLMEN DISCHARGE TOTAL_BILL_AMT
+--------- --------- --------------
+       101 sai                  hyd                                   98456780
+15-JUN-16 05-NOV-17          90000
+
+       103 amy                  bbsr                                  98452780
+05-JAN-89 08-FEB-89          15000
+
+       105 roli                 chennai                               98451780
+12-MAR-80 18-APR-80           8000
+
+
+*****************************************************************************************
+5) select pl.patient_id,pl.test_id,pl.observations,t.doctor_id from patient_log pl,test t where t.test_id(+)=pl.test_id;
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        853 problem
+        78
+
+       103        852 weak
+      1234
+
+       104        852 improved
+      1234
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        852 good
+      1234
+
+       103        852
+      1234
+
+       104        852
+      1234
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        852
+      1234
+
+       105            no problem
+
+
+       109
+********************************************************************************************************
+
+6)  SQL> select patient_id,patient_name,address from patient where patient_id in(select patient_id from patient_log
+    where test_id in(select test_id from test where test_name='ecg'));
+
+PATIENT_ID PATIENT_NAME         ADDRESS
+---------- -------------------- -----------------------------------
+       101 sai                  hyd
+
+**********************************************************************************
+
+7) select doctor_id from doctors where doctor_id not in(select doctor_id from test);
+
+ DOCTOR_ID
+----------
+       546
+        65
+                                                    
+                                                                               OR...
+
+Co-releated output:-----
+
+select doctor_id from doctors d where not exists(select doctor_id from test where doctor_id =d.doctor_id) ;
+
+ DOCTOR_ID
+----------
+       546
+        65
+*************************************************************************************
+Note :-- Have to use co-releated query....  try to do it as que asked
+Rough work....
+
+select doctor_id from doctors d where doctor_id in(select doctor_id from test where doctor_id = d.doctor_id) 
+
+
+select doctor_id from doctors d where  exists(select doctor_id from test where doctor_id = d.doctor_id) 
+
+select doctor_id from doctors d where count(doctor_id) in(select doctor_id from test where doctor_id <> d.doctor_id) 
+
+
+
+
+
+
+8)PURPOSE OF REDO LOG FILE
+
+The purpose of redo log file is to record all changes made to the data during the recovery of database.
+It always advisable to have two or or more redo log files and keep them in a seperate disc.
+so that we can recover the data during system  crash.
+
+
+INDEX
+
+
+The index is used to run the queries faster.
+
+if the optimizer detects an index that matches part of the WHERE clause of the query,
+then it uses the index to avoid having to read every row in the table.
+
+
+Oracle instance
+
+An oracle instance also known as database instace contains the set of  oracle database background processes
+that operate on the stored data and the shared allocated memory that those processes use to do their  work.
+
+An instance must be started to read and write information to the database.it is the instance that actually creates the database upon receipt of instructions from the 
+oracle database configuration assistant(DBCA).  
+
+
+
+
+SCHEMA
+
+
+
+
+TABLE CLIENT_DETAILS
+TABLE ROOMS
+TABLE BILL_DETAILS
+
+
+create table client_details
+(
+client_name char(20),
+address varchar(50),
+contact_no number(10),
+purpose char(20),
+client_id varchar(20) primary key,
+checkin_date date
+);
+
+
+create table rooms
+(
+client_id varchar(20) references client_details(client_id),
+room_id varchar(20) primary key,
+room_type char check(room_type in('ac','non-ac','dormitory')),
+rate_per_day number(5,2)
+--avilability char check (availability in ('Y','N'))
+);
+
+create table bill_details
+(
+bill_no number primary key,
+room_id varchar(20) references rooms(room_id),
+client_id varchar(20) references client_details(client_id),
+checkout_date date,
+book_days number(3),
+bill_amt number(5,2), 
+payment_method char(20) check (payment_method in ('cash','debit','credit','net banking'))
+);

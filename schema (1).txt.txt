@@ -1,0 +1,142 @@
+1. A road transport office keeps the information of the all vehicles and persons who owns the vehicles. It also keeps the records of their accidents. Each person can own one or more cars. It also maintains the accident information about the cars like date of accident, damage amount, insurance claimed or not, insurance amount etc. One car can undergo more than one accident.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+ANS)  
+
+create table vehicle
+ (
+               vehicle_id number(8) constraint pk_vehicle_vehicle_id primary key,
+               vehicle_type varchar2(9) ,
+               vehicle_ownerid varchar2(8), constraint fk foreign_key(vehicle_ownerid) references person(vehicle_ownerid),
+               vehicle_name varchar2(8)
+  );
+   
+create table person
+(
+ vehicle_ownerid varchar(8) constraint prk_person_person_id primary key,
+ person_name varchar2(8),
+ address varchar2(8) ,
+contact_no number(9)
+);
+
+create table accident_info
+(
+accident_id number(9) constraint pkey_accident_info_accident_id primary key,
+date_of_accident DATE ,
+damage_amount number(8),
+vehicle_id number(8) ,constraint f_k foreign key(vehicle_id) references vehicle(vehicle_id),
+insurance_claimed constraint chk_accident_info_insurance_claimed check(insurance_claimed in('Y','N')),
+insurance amount number(8)
+);
+
+
+
+2.A travel agency keeps the information of the all vehicles which it gives on rent and records of their customers and drivers. Customer and vehicle details are maintained. It maintains vehicle rent details like which vehicle is given on rent, to whom, start and end date and rent of that vehicle.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+ANS)  
+create table vehicle
+(
+vehicle_id varchar2(8) constraint pk_vehicle_vehicle_id primary key,
+vehicle_type varchar2(9),
+vehicle_name varchar2(8),
+engine_number number(8) 
+);
+
+
+create table customer
+(
+customer_id varchar2(8) constraint pkey_customer_customer_id primary key,
+customer_name varchar2(8),
+customer_address varchar2(9),
+phone_no number(9)
+);
+ 
+
+create table driver
+(
+driver_id varchar2(8) constraint pky_driver_driver_id primary key,
+driver_name varchar2(8),
+driver_address varchar2(8),
+driver_contact_no number(8)
+);
+
+create table vehicle_rent_details
+(
+vehicle_id varchar2(8),constraint f_ky foreign key(vehicle_id) references vehicle(vehicle_id),
+customer_id varchar2(8),constraint f_key foreign key(customer_id) references customer(customer_id),
+driver_id varchar2(8)
+rent_paid number(8),
+start_date DATE,
+end_date DATE  
+);
+
+3.An PDFC Bank keeps track of all its, branch, customer and account details. One customer can have more than one account. It also maintains details of the transactions made by the customer. Account can have multiple transactions of credit and debits. Transactions details are date of transaction, type of transaction (credit/debit) ,amount etc.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database
+
+ANS.
+
+create table customer1
+(
+customer_id varchar2(8) constraint pk_customer1_customer_id primary key,
+customer_name varchar2(8),
+customer_address varchar2(8),
+phone_no number(8)
+);
+
+create table account_details
+(
+account_no number(8) constraint pke_account_details_account_no primary key,
+account_type varchar2(8) check(account_type in('SAVING','CURRENT')),
+account_bal number(8),
+customer_id  varchar2(8),constraint fn_y foreign key(customer_id) references customer1(customer_id)
+);
+
+create table branch
+(
+branch_id number(8) constraint pky_branch_branch_id primary key,
+branch_name varchar2(8),
+city varchar2(8),
+account_no number(8),constraint f_e foreign key(account_no) references account_details(account_no)
+);
+
+
+create table tn_details
+(
+tn_id number(8) constraint py_tn_details_tn_id primary key,
+tn_date DATE,
+tn_type varchar2(8) check(tn_type in('CREDIT','DEBIT')),
+amount_tn number(8),
+account_no number(8),constraint f_r foreign key(account_no) references account_details(account_no)
+);
+   
+
+4.The shop keeper records the information of the products, product orders and their customers. Customers can place multiple orders and an order can be raised for multiple products. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database. 
+
+ANS.
+
+create table product
+(
+product_id number(8) constraint p_k_product_product_id primary key,
+product_name varchar2(8),
+manufacture_date DATE,
+expiry_date DATE,
+Quantity_in_gm number(8),
+product_cost number(8)
+);
+
+create table customer2
+(
+customer_id varchar2(8) constraint p_y_customer2_customer_id primary key,
+customer_name varchar2(8),
+customer_address varchar2(8),
+customer_phone_no number(8)
+);
+
+ 
+create table product_orders 
+(
+order_id varchar2(8) constraint p_ky_product_orders_order_id primary key, 
+customer_id varchar2(8),constraint f_y foreign key(customer_id) references customer2(customer_id),
+product_id number(8),constraint f_i foreign key(product_id) references product(product_id)
+ );
+  
+

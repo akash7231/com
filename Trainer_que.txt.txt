@@ -1,0 +1,53 @@
+1) A database for Music Albums need  to be maintained.
+    Need to maintain the music_album details like album name,release date, price, releasing company etc.
+    Need to maintain details for singers like singer name, address, gharana etc
+    Need to maintain song details like song name, singer of the song.
+    One album can have multiple songs sung by various singers and one singer can sing multiple songs.
+    Identify required tables, columns and their relationship to represent the above information.
+    Write the SQL commands to represent the schema (tables) in the database.
+==============================================================================================================================================
+
+2)  What is the use of CHECK constraint
+==============================================================================================================================================
+
+3) Explain the diference between WHERE and HAVING clauses
+==============================================================================================================================================
+
+4) Write a query to display the number of sessions conducted by 'NITA' in the year 2015
+A. select count(trainerid) from session_details where trainerid=(select trainerid from trainer_details where trainername='NITA') and to_char(sdate,'yyyy')=2015;
+
+or 
+
+A. select count(trainerid) from session_details s natural join trainer_details t where trainername='NITA' and to_char(sdate,'yyyy')=2015;
+
+==============================================================================================================================================
+
+5) Write a query to display the details of the trainers like trainer name, stream and experience who are eligible to conduct JAVA session
+
+A. select trainername,primary_skill,exp from trainer_details where trainerid in (select trainerid from session_details where sname='JAVA');
+==============================================================================================================================================
+
+6) Write a query to display the details of the trainers like trainer name, stream and experience who are eligible to conduct BT session
+
+A. select trainername,primary_skill,exp from trainer_details where trainerid in (select trainerid from session_details where sname='BT');
+==============================================================================================================================================
+
+7) Write a query to display the number of trainers per stream
+
+A. select stream,count(stream) from trainer_details group by stream;
+==============================================================================================================================================
+
+8) Write a query to display name of the trainer/trainers who have not conducted any sessions so far
+
+A.  select trainername from trainer_details where trainerid not in (select trainerid from session_details);
+==============================================================================================================================================
+
+9) Write a query to display the name and stream of those trainers who has maximum experience in their respective stream
+
+A.  select trainername,stream,exp from trainer_details where (stream,exp) in (select stream,max(exp) from trainer_details group by stream);
+==============================================================================================================================================
+
+10) Write a query to display name of the stream which has maximum number of trainers
+
+A. select stream,count(*) max_tra from trainer_details group by stream having count(*)= (select max(count(*)) max_tra from trainer_details group by stream);
+==============================================================================================================================================

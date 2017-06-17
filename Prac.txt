@@ -1,0 +1,53 @@
+select * from emp where to_char(hiredate,'yyyy')=1981 and job in( select job from emp where hiredate=(select min(hiredate) from emp where hiredate in (select hiredate from emp where to_char(hiredate,'yyyy')=1981)));
+
+
+
+
+
+
+select * from emp where to_char(hiredate,'yyyy')=1981 and job in (select job from emp where hiredate=(select min(hiredate) from (select hiredate from emp where to_char(hiredate,'yyyy')=1981)));
+
+
+
+
+
+select d.doctor_name from patient p , patient_log l, test t, doctors d
+where 
+p.patient_id=l.patient_id and
+l.test_id=t.test_id and
+t.doctor_id=d.doctor_id and
+to_char(discharge_dt, 'MON')='JUN';
+
+
+select p.patient_name, count(l.test_id) from  patient p , patient_log l where p.patient_id=l.patient_id group by p.patient_id , p.patient_name;
+
+
+select count(patient_id) from patient where to_char(discharge_dt,'mon') in ('jun', 'jul');
+
+select p.patient_name from patient p, patient_log l ,test t, doctors d where p.patient_id=l.patient_id and l.test_id=t.test_id and t.doctor_id=d.doctor_id and doctor_name='Purva' ;
+
+
+
+select p.patient_name , count(l.patient_id) from patient p, patient_log l,test t 
+where p.patient_id=l.patient_id and l.test_id=t.test_id and p.total_bill_amt>9000 group by patient_name having count(l.patient_id)>1;
+
+------------
+
+4
+select count(e.emp_id) from employee e, project p, employee_allocation l 
+where e.emp_id=l.emp_id and l.proj_id = p.proj_id and p.proj_name='GE APPLICATION SUPPORT' and e.secondary_competency='JAVA';
+
+5.
+select l.proj_id from EMPLOYEE_ALLOCATION l , employee e where e.emp_id=l.emp_id and e.emp_name='SANGEETA';
+
+//6.
+select p.proj_name, rownum  from project p ,(select proj_id , count(emp_id) b from employee_Allocation group by proj_id order by b desc)a where p.proj_id=a.proj_id and rownum=2;
+
+
+7
+select e.emp_name , e.primary_competency from employee e where experience in (select max(experience) from employee e);
+
+
+
+8.   select emp_name from employee where emp_id not in(select e.emp_id from employee e,  EMPLOYEE_ALLOCATION l where e.emp_id=l.emp_id );
+

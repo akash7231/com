@@ -1,0 +1,80 @@
+q1.Display the number of products having cost greater than or equal to 500?
+      ANS:
+       select count(prod_id) 
+       from product 
+       where prod_cost>=500;
+    
+q2. Display the name & address of customers who have ordered items in the month of march?
+      ANS:
+       select c.cust_name,c.cust_add 
+       from customer c, prod_order p 
+        where c.cust_id= p.cust_id and to_char(p.order_date,'mon')='mar';
+   
+Q3.Display product name,number of orders placed so far?
+      ANS:
+       select p.prod_name,count(p1.order_qty) 
+       from product p, prod_order p1 
+       where p.prod_id= p1.prod_id GROUP by p.prod_name;
+    
+Q4.Display the name of products which are ordered only once in the month of june?
+      ANS:
+       SELECT p.prod_name 
+       from product p, prod_order p1 
+       where p.prod_id=p1.prod_id 
+       group by to_char(p1.order_date,'mon'), p.prod_name 
+       having to_char(p1.order_date,'mon')='jun' and  count(p1.order_id)=1
+
+q5.Display customer name and order date,including customers who have not placed any order?
+     Ans:
+	select c1.cust_name,p.order_date 
+	from customer c1, prod_order p 
+	where p.cust_id(+)= c1.cust_id;                 
+
+
+q6.Display the name of product and category which is not ordered by any customer so far?
+       ANS:select distinct(prod_name), prod_category 
+	   from product 
+	   where prod_id <> all(select prod_id from prod_order);   
+
+q7.Display total amount of all invoices?
+select sum(inv_amt)as totalamount from invoice;
+
+q8.
+ANS:
+create table album(
+album_id number(10) primary key,
+album_name varchar2(20),
+album_releasedate date,
+album_price number(7,2),
+album_releasingcmp varchar2(20)
+);
+
+create table singer(
+singer_id number(10) primary key,
+singer_name varchar2(20),
+singer_add varchar2(50),
+singer_gharana varchar2(20)
+);
+
+
+create table song(
+song_id number(10) primary key,
+song_name varchar(20),
+album_id number(10) references album(albumid)
+singer_id NUMBER(10) references singer(singer_id)
+);
+
+desc album;
+desc singer;
+desc song;
+
+q9.what is the purpose of redo log file?
+   purpose of redo log file
+        1.changes made in the database are recorded using redo log file
+        2.database contain atleast 2 redo log file
+
+
+q10.when oracle does not use index?
+        1.using greater than symbol in where clause
+        2.when query is made run from java
+

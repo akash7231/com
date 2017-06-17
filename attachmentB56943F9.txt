@@ -1,0 +1,244 @@
+1) char
+2)varchar2
+3) date
+4)number
+5)long
+6)raw
+7)LOB
+   internal---CLOB,BLOB
+   external---Bfiles
+
+name char(5)
+
+anju
+ab
+c
+
+name varchar2(5)
+anju-->4
+ab-->2
+c-->1
+
+
+hiredate date
+
+salary number
+salary number(4)
+salary number(5,1)
+salary number(8,2)
+
+--------------------------------
+set linesize 400
+select * from dict;
+System tables / DD
+userdefined tables
+DDL
+
+
+create table TableName(columnname datatype  defaultvalue,
+ (columnname datatype  defaultvalue,....);
+
+
+create table dept11(deptno number(4),dname varchar2(30));
+
+drop table tableName;
+
+drop table dept11;
+
+--------------------------
+alter table tablename
+add/drop/modify/rename
+
+-----------------------
+
+alter table tablename
+add columname datattype;
+
+
+alter table tablename
+add (columname datattype,columname datattype,...);
+
+---------------------------------------------
+alter table dept11
+add  city varchar2(20);
+
+
+alter table dept11
+add  (city varchar2(20), mgrid number);
+
+
+---------------------------
+alter table tablename
+drop column columname ;
+
+
+
+alter table dept11
+drop column city ;
+
+
+alter table TableName
+drop (columnNmae1,columnname2,...) ;
+
+alter table dept11
+drop (city , mgrid);
+----------------------------------
+
+alter table tablename
+modify colunmname datatype;
+
+
+
+alter table dept11
+modify deptno varchar2(20);
+
+
+alter table dept11
+modify (deptno varchar2(20), dname number);
+
+
+
+alter table tablename
+rename column oldcolumnname to new columnname
+
+
+alter table dept11
+rename column dname to deptname ;
+--------------------------------------------------
+rename table
+
+rename oldtableName to newtablename;
+
+
+rename dept11 to dept12
+
+
+truncate table tableName;
+
+truncate table dept12;
+------------------------------------------
+  select * from dept12;
+
+DML
+
+insert into tableName values(....);
+insert into tableName(column_list) values(....);
+
+insert into dept12 values(10,'HR');
+insert into dept12 values('HR',10); --- error
+
+
+insert into dept12 values(10,NULL);
+
+insert into dept12(deptname) values ('Sales');
+
+insert into dept12 (deptname,deptno) values('Sales',30); 
+----------------------------------------------------------
+
+
+update tablename set columnName1=value,columnName2=value,...
+[where condition]
+
+
+update dept12 set deptname ='nodeptName' where deptno is null
+
+
+update dept12 set deptname ='dd'
+>
+<
+>=
+<=
+=
+<>   !=
+
+other
+is null
+is not null
+between ... and..
+like
+
+delete from tableName[where condition]
+
+delete from dept12;
+
+delete from dept12 where deptno=10;
+
+---------------------------------------------------------
+
+constraints
+1)primary key
+2) not null
+3) check
+4)unique
+5)foreign key
+
+column  level
+create table dept(deptno number primary key, 
+         dname varchar(30) not null);
+
+
+dd-->user_constraints
+
+select  constraint_name,constraint_type, TABLE_NAME,SEARCH_CONDITION
+from user_constraints;
+
+select INDEX_NAME , INDEX_type, table_name user_indexes
+
+SYS_CN  n is integer
+------------------------------------------------
+create table dept(deptno number constraint pk_deptno 
+primary key,          dname varchar(30) constraint cons_notnull  not null);
+
+
+--------------------------------------------------
+
+
+table level /system
+
+create table dept(deptno number ,   
+ dname varchar(30)   not null,
+constraint pk_deptno primary key(deptno));
+---------------------------------------
+create table dept(deptno number ,   
+ dname varchar(30)   );
+
+
+alter table tableNAme
+add constraint constraintNAme constraint_type(colName);
+
+alter table dept
+add constraint pk_deptno primary key(deptno);
+
+alter table dept 
+add constraint notnullCons  check (deptno is not null) ;
+
+
+alter table dept 
+drop constraint notnullCons;
+
+alter table dept 
+drop primary key;
+----------------------------------------------
+
+create table emp(empno number primary key , 
+ename varchar2(30) not null,
+emailid varchar2(30) unique,
+ salary number check (salary >0),
+deptno number  references dept(deptno));
+
+
+---------------------------------
+alter table emp
+add constraint fk_deptno foreign key(deptno) references dept(deptno);
+--------------------------------------------
+composite constraint
+
+alter table dept
+add constraint pk_deptno primary key(deptno,deptname);
+
+alter table dept
+add constraint pk_deptno unique(deptno,deptname);
+
+
+
+

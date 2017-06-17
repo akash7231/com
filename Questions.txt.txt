@@ -1,0 +1,27 @@
+1.Display how many total employees are allocated for projects.
+
+select count(*) from employee where emp_id in (select distinct emp_id from employee_allocation);
+
+2.Display the details of employee as well as their project details who are having primary competency PLSQL
+select e.emp_id,emp_name,primary_competency,proj_name,p.proj_id from employee e,project p,employee_allocation a where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id) and primary_competency='PLSQL';
+
+3.Display employee details thoes who are join before 30-APR-05
+
+select * from employee where date_join<'30-APR-05';
+
+4.Display emp_id,emp_name,proj_id,proj_name and allocation_id for every employee.
+
+select e.emp_id,emp_name,proj_name,p.proj_id,allocation_id from employee e,project p,employee_allocation a where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id);
+
+
+5.Display the name of employee Who joined recently.
+select emp_id,emp_name from employee where date_join =(select max(date_join) from employee);
+
+6.Display the details of employee who are not allocated to any project.
+select emp_id,emp_name from employee where emp_id not in(select distinct emp_id from employee_allocation);
+
+7.Display details of employees thoes who are allocated for project VODAFONE.
+select e.emp_id,emp_name from employee e,project p,employee_allocation a where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id) and proj_name='VODAFONE';
+
+rename employee to emp1;
+

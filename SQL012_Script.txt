@@ -1,0 +1,72 @@
+drop table Patient_log;
+drop table Test;
+drop table Doctors;
+drop table Patient;
+
+create table Patient
+(
+patient_id number(6) primary key,
+patient_name varchar2(20) not null,
+address varchar2(35),
+phone_num number(10) not null,
+enrollment_dt date not null,
+discharge_dt date,
+total_bill_amt number(6)
+);
+
+create table Doctors
+(
+doctor_id number(6) primary key,
+doctor_name varchar2(20) not null,
+doct_address varchar2(35),
+doct_ph_no number(10)
+);
+
+create table Test
+(
+test_id number(4) primary key,
+test_name varchar2(20),
+doctor_id number(6),
+constraint fk_doctor_id foreign key(doctor_id) references Doctors
+);
+
+create table Patient_log
+(
+patient_id number(6),
+test_id number(4),
+observations varchar2(50) not null,
+constraint fk_patient_id foreign key(patient_id) references Patient,
+constraint fk_test_id foreign key(test_id) references Test)
+;
+
+insert into Patient values (101, 'Anand', 'Pune', 64003596, '10-JUN-2005', '15-JUN-2005', 10000);
+insert into Patient values (102, 'Smita', 'Bombay', 43567890, '15-JUN-2005', '12-JUL-2005', 25000);
+insert into Patient values (103, 'Girish', 'Pune', 34256787, '17-JUN-2005', '14-AUG-2005', 50000);
+insert into Patient values (104, 'Sonal', 'Pune', 23456781, '20-JUN-2005', '25-JUN-2005', 10000);
+insert into Patient values (105, 'Sachin', 'Pune', 45623789, '21-JUN-2005', '30-JUN-2005', 85000);
+insert into Patient values (106, 'Manish', 'Bombay', 23415678, '25-AUG-2005', '30-AUG-2005', 50000);
+insert into Patient values (107, 'Kirti', 'Pune', 34526878, '17-AUG-2005', '22-SEP-2005', 40000);
+insert into Patient values (108, 'Abhinay', 'Nasik', 89452456, '25-AUG-2005', '30-AUG-2005', 45000);
+insert into Patient values (109, 'Rajesh', 'Nasik', 56678991, '15-OCT-2005', '14-NOV-2005', 150000);
+insert into Patient values (110, 'Kalyani', 'Pune', 34512789, '12-NOV-2005', '14-DEC-2005', 80000);
+
+insert into Doctors values (1, 'Purva', 'Pune', 6578934);
+insert into Doctors values (2, 'Amit', 'Bombay', 2345136);
+insert into Doctors values (3, 'Amol', 'Pune', 3456782);
+insert into Doctors values (4, 'Akash', 'Nasik', 4562389);
+insert into Doctors values (5, 'Ravi', 'Bombay', 1235673);
+
+insert into Test values (10, 'Blood', 1);
+insert into Test values (11, 'Urine', 2);
+insert into Test values (12, 'ECG', 3);
+insert into Test values (13, 'X-Ray', 4);
+insert into Test values (14, 'Eye', 5);
+
+insert into patient_log values (101, 10, 'Sugar present');
+insert into patient_log values (101, 11, 'Parasite present');
+insert into patient_log values (102, 12, 'High BP');
+insert into patient_log values (103, 13, 'Minor bone crack');
+insert into patient_log values (104, 13, 'Major bone crack');
+insert into patient_log values (105, 14, 'Color blindness');
+
+

@@ -1,0 +1,47 @@
+5.A Real Estate agency records the transactions where the builder sells property to a buyer through an agent. It keeps records of builders, Agents, buyers and transactions of the properties. A customer can purchase the property from buyer or agents. When property is purchased from the agent then agent gets commission from buyer or builder or both. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+ANS.
+
+create table builders
+(
+builder_id varchar2(8) constraint pk_builders_builder_id primary key,
+builder_name varchar2(8),
+builder_address varchar2(8),
+builder_phone_no number(8),
+property varchar2(8)
+);
+
+create table agents
+(
+agent_id varchar2(8) constraint pke_agents_agent_id primary key,
+agent_name varchar2(8),
+agent_address varchar2(8),
+agent_contact_no number(8)
+);
+
+create table buyers
+(
+buyers_id varchar2(8) constraint pkey_buyers_buyers_id primary key,
+buyers_name varchar2(8),
+buyers_address varchar2(8),
+buyers_phone_no number(8)
+);
+
+create table tn1_details
+(
+tn_id varchar2(8) constraint p_m_tn1_details_tn_id primary key,
+builder_id varchar2(8),constraint fo_y foreign key(builder_id)references builders(builder_id),
+agent_id varchar2(8),constraint f_o foreign key(agent_id) references agents(agent_id),
+comm_from_builder number(8),
+comm_from_buyer number(8)
+);
+
+
+
+
+
+
+
+
+

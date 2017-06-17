@@ -1,0 +1,149 @@
+
+AIRPORT
+
+
+AIRPORT_CO AIRPORT_NAME                   AIRPORT_LO AIRPORT_TYPE
+---------- ------------------------------ ---------- ---------------
+AIR0001    Sahara                         Mumbai     International
+AIR0002    Dumdum                         Kolkata    General
+AIR0003    Rajiv Gandhi Airport           Hyderabad  International
+AIR0004    Chandigarh International port  Chandigarh International
+AIR0005    Lohegaon Airport               Pune       Domestic
+AIR0006    Madurai Airport                Madurai    General
+AIR0007    Hindustan Airport              Bangalore  Domestic
+AIR0008    Vimanapura Airbase             Bangalore  International
+AIR0009    Juhu Aerodrome                 Mumbai     Domestic
+
+
+======================================================
+
+FLIGHT_SCHEDULE
+
+
+SCHEDULE_I DEPARTURE ARRIVAL_D SOURCE_AIR DESTINATIO NO_OF_SEATS
+---------- --------- --------- ---------- ---------- -----------
+SCH0001    10-OCT-09 10-OCT-09 AIR0001    AIR0002            230
+SCH0002    23-OCT-09 24-OCT-09 AIR0001    AIR0003            230
+SCH0003    23-NOV-09 24-NOV-09 AIR0002    AIR0004            230
+SCH0004    03-DEC-09 03-DEC-09 AIR0007    AIR0009            230
+SCH0005    23-JAN-10 23-JAN-10 AIR0009    AIR0007            230
+SCH0006    15-NOV-09 16-NOV-09 AIR0006    AIR0007            230
+SCH0007    30-NOV-09 23-NOV-09 AIR0003    AIR0004            230
+
+=======================================================
+
+PASSENGERS
+
+
+P_ID       P_NAME                         EMAIL                          CITY
+         CONTACT_NO
+---------- ------------------------------ ------------------------------ -------
+-------- ----------
+PA001      Sonali                         sonali.pathak@gmail.com        Pune
+         9824105322
+PA002      Hari                           hari.sadu@yahoo.com            Pune
+         9824108322
+PA003      Ghanshyam                      Ghanshyam@gmail.com            Mumbai
+         9924885322
+PA004      Ratna                          Ratna@yahoo.com                Mumbai
+         9824153552
+PA005      Leela                          Leela@gmail.com                Kolkata
+         9824105562
+PA006      Robin                          Robin.George@gmail.com         Chennai
+         9041032782
+PA007      Sonam                          Sonam@yahoo.com                Chennai
+         9024105322
+=========================================================
+
+TICKET_BOOKING
+
+RESERVATIO SCHEDULE_I P_ID       RESERVATIO DATE_RESE       FARE
+---------- ---------- ---------- ---------- --------- ----------
+R0001      SCH0001    PA001      Waiting    04-OCT-09       1000
+R0002      SCH0001    PA002      Confirm    04-OCT-09       1000
+R0003      SCH0002    PA001      Confirm    04-OCT-09       1500
+R0004      SCH0004    PA004      Waiting    01-NOV-09       1500
+R0005      SCH0005    PA003      Confirm    20-DEC-09       2000
+R0006      SCH0001    PA005      Waiting    04-OCT-09       1000
+R0007      SCH0005    PA002      Confirm    04-JAN-10       2000
+R0008      SCH0005    PA001      Confirm    02-JAN-10       2000
+
+============================================================
+
+1.select substr(p_name,1,4),upper(city) from passengers;
+
+SUBSTR(P_NAME,1, UPPER(CITY)
+---------------- ---------------
+Sona             PUNE
+Hari             PUNE
+Ghan             MUMBAI
+Ratn             MUMBAI
+Leel             KOLKATA
+Robi             CHENNAI
+Sona             CHENNAI
+--------------------------------------------------------------------------------------------------
+2. select airport_type,count(*) from airport group by airport_type;
+
+AIRPORT_TYPE      COUNT(*)
+--------------- ----------
+General                  2
+Domestic                 3
+International            4
+---------------------------------------------------------------------------------------------------
+
+3.SELECT SUM(NO_OF_SEATS) FROM FLIGHT_SCHEDULE;
+
+SUM(NO_OF_SEATS)
+----------------
+            1610
+----------------------------------------------------------------------------------------------------
+
+4. SELECT COUNT(*) FROM TICKET_BOOKING WHERE RESERVATION_STATUS!='Confirm';
+
+  COUNT(*)
+----------
+         3
+-----------------------------------------------------------------------------------------------------
+
+5. SELECT EMAIL FROM PASSENGERS WHERE EMAIL LIKE '%.%.com%';
+
+EMAI
+------------------------------
+sonali.pathak@gmail.com
+hari.sadu@yahoo.com
+Robin.George@gmail.com
+-----------------------------------------------------------------------------------------------------
+
+6. SELECT * FROM PASSENGERS WHERE P_ID IN (SELECT P_ID FROM TICKET_BOOKING WHE
+RE TO_CHAR(DATE_RESERVATION_MADE,'MON') = 'OCT');
+
+P_ID       P_NAME                         EMAIL                          CITY
+         CONTACT_NO
+---------- ------------------------------ ------------------------------ -------
+-------- ----------
+PA001      Sonali                         sonali.pathak@gmail.com        Pune
+         9824105322
+PA002      Hari                           hari.sadu@yahoo.com            Pune
+         9824108322
+PA005      Leela                          Leela@gmail.com                Kolkata
+         9824105562
+
+------------------------------------------------------------------------------------------------------------------
+
+9. SELECT SCHEDULE_ID,COUNT(*) "RESERVATION COUNT" FROM TICKET_BOOKING GROUP BY SCHEDULE_ID ORDER BY COUNT(*) DESC;
+
+SCHEDULE_I RESERVATION COUNT
+---------- -----------------
+SCH0001                    3
+SCH0005                    3
+SCH0002                    1
+SCH0004                    1
+-------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE TOURS
+(
+TOUR_NAME CHAR(10),
+TOUR_ID VARCHAR(10) PRIMARY KEY,
+TOUR_COST NUMBER,
+ITINERY VARCHAR(10)
+);

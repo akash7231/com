@@ -1,0 +1,145 @@
+1)Display the name of all patients who are staying in Nasik.
+
+       select patient_name from patient where address='Nasik';
+
+2)Display test name and all the information of the doctor who can perform that test.     
+
+   select  test_name t,doctor_name d,doct_address d,doct_ph_no d
+   from doctors d,test t where d.doctor_id=t.doctor_id;
+
+3) Display the names of doctors whose patients got discharge in the month of ‘december’.
+
+
+   select patient_id from patient where to_char(discharge_dt, 'mon')='dec';
+
+   select doctor_name d , patient_name p  ,test_name t ,observations l from doctors   d, patient p, test t ,patient_log l 
+  where 
+   p.patient_id=l.patient_id and
+   t.doctor_id=d.doctor_id and
+   l.test_id=t.test_id  and 
+   to_char(discharge_dt, 'mon')='dec';
+         
+
+
+
+ 4)  Display the patient name and no.of tests he / she has undergone so far.	
+      
+select p.patient_name, count(p.patient_name)NO_OF_TESTS 
+from patient p,patient_log l 
+where (p.patient_id=l.patient_id) 
+group by p.patient_name;
+
+select p.patient_name, count(p.patient_name)NO_OF_TESTS 
+from doctors   d, patient p, test t ,patient_log l 
+  where 
+  (p.patient_id=l.patient_id and
+   t.doctor_id=d.doctor_id and
+   l.test_id=t.test_id ) 
+group by p.patient_name;
+
+select p.patient_name, count(p.patient_id)NO_OF_TESTS 
+from doctors   d, patient p, test t ,patient_log l 
+  where 
+  (p.patient_id=l.patient_id and
+   t.doctor_id=d.doctor_id and
+   l.test_id=t.test_id ) 
+group by p.patient_name,p.patient_id;
+
+
+
+
+
+
+
+5)Display the count of the patients who have been enrolled in the first Quarter (from Jan to March) of the current year.
+
+   select * from patient where to_char(enrollment_dt ,'mon')='dec';
+   
+   select patient_name,count(patient_name) from patient where to_char(enrollment_dt ,'mon')  in ('jan','mar') group by patient_name;
+
+   select patient_id,count(patient_id) from patient where to_char(enrollment_dt ,'mon')  in ('jun','sep') group by patient_id;
+
+   select patient_name,count(patient_name) from patient where to_char(enrollment_dt ,'mon')  between 'jan' and 'sep' group by patient_name;
+
+
+6)Display the names of patients who are treated by doctor ‘Purva’. 
+
+  select patient_name p,doctor_name d
+  from doctors   d, patient p, test t ,patient_log l 
+  where 
+  (p.patient_id=l.patient_id and
+   t.doctor_id=d.doctor_id and
+   l.test_id=t.test_id ) and doctor_name='Purva' ;
+
+
+7)Display the list of all patients who have undergone more than 2 tests and have paid more than Rs. 25000 as the total bill amount.
+   
+   select p.patient_id, count(t.test_id)NO_OF_TESTS,p.total_bill_amt 
+   from doctors   d, patient p, test t ,patient_log l 
+    where 
+  (p.patient_id=l.patient_id and
+   t.doctor_id=d.doctor_id and
+   l.test_id=t.test_id ) and
+   p.total_bill_amt > 25000   
+   group by p.patient_id ,p.total_bill_amt,t.test_id  having count(t.test_id)>1;
+
+   select * from patient where total_bill_amt > 2000;
+
+    select test_name from test where count(test_name) > 1 ;
+
+    SELECT COUNT( patient_name) 
+   FROM patient 
+   HAVING COUNT(patient_name)>1;
+
+select count(test_id) from test having count(test_id)>1;
+
+ 
+8)A healthcare company is launching Health tracker bands. They tend to be worn on the wrist like a watch. Using Health tracker bands you'll be able to    keep track of health of old age family members.
+  It raises an alert message if some abnormal conditions are detected like fluctuation in heartbeat rate   or BP. 
+ Each band had unique device ID and model name. 
+ Each device is associated with specific customer. 
+ Customer need to provide date of birth,address, emergency contact number of family member and emergency contact number doctor. 
+ Health trackers also has built in watch and GPS   system. 
+ Health tracker sends an alert message to family member and doctor on detection of any abnormal health condition. 
+Alert message contains   time of alert, location and alert message. 
+Identify required tables, columns and their relationship to represent the above information. 
+Write the SQL   commands to represent the schema (tables) in the database.	
+
+BAND TABLE:
+ CREATE table band(device_id number(10) primary key,
+      		model_name varchar2(15),
+		heart_rate varchar2(30),
+		BP varchar2(30));
+
+CUSTOMER TABLE:
+CREATE table customer(customer_id number(10) primary key,
+			customer_name varchar2(15),
+			date_of_birth date,address varchar2(30),
+			emergency_contact_of_family number(10),
+			emergency_contact_of_doctor number(10),
+			device_id number(10) references band(device_id));
+  
+ALERT_MESSAGE TABLE:
+CREATE table alert_message(message_id number(10) primary key, 
+			time_of _alert date,
+			 location varchar2(15),
+			alert message varchar2(30),
+			customer_id number(10) references customer(customer_id));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

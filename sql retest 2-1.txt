@@ -1,0 +1,109 @@
+1) 
+    8 marks Table eschema creation question:TOUR SCENARIO
+
+
+
+    TRAVELLERS_DETAILS  TABLE:
+    CREATE table travellers_details(traveller_id number(10) primary key,
+			traveller_name varchar2(15),
+			address varchar2(30),
+			contact_no number(12),
+			date_of _journey date,
+			no_of_persons number(10),
+			tour_id number(10) references tour_details(tour_id));
+
+
+   TOUR_DETAILS TABLE:
+    CREATE table tour_details(tour_id number(10) primary key,
+			tour_name varchar2(15);
+			price number(10),
+			start_date date,
+			return_date date,
+			traveller_id number(10) references travellers_details(traveller_id));
+
+
+   TRAVEL_AGENT_DETAILS TABLE:
+   CREATE table travel_agent_details(agent_id number(10) primary key,
+				agent_name varchar2(15),
+				agent_code varchar2(15),
+				agent_contact_no number(12),
+				agent_comm_percentage number(10),
+				tour_id number(10) references tour_details(tour_id));
+
+
+2)USAGE OF AUTOTRACE COMMAND? (2marks)
+   *Table space??
+    *background process??
+
+3)Difference between LEFT OUTER JOIN,INNER JOIN and RIGHT OUTER JOIN? (2marks)
+
+4)Write a query to display the no. of employees who works for project "GE Application Support" and having secondary competency in 'JAVA'. (3 marks)
+
+   select count(e.emp_id) from employee e,project p,employee_allocation a 
+   where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id)
+   and e.secondary_competency='JAVA' and p.proj_name='GE Application Support ' group by e.emp_id;
+
+5) Write a query to display the Project ids where employee SANGEETA has worked. (2 marks) 
+
+  select p.proj_id  from employee e,project p,employee_allocation a 
+  where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id) and e.emp_name='SANGEETA';
+
+
+6) Write a query to display the project name which has second highest no of employees. (3 marks)
+
+
+  select p.proj_name,min(e.emp_id) from (select distinct e.emp_id  from employee e order by e.emp_id desc)employee e,project p,employee_allocation a 
+  where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id) 
+  and rownum<=2;
+  
+   *select min(sal) from(select distinct sal salary from emp order by sal desc) e where rownum<=2;
+
+    * select d.deptno,min(e.sal) from (select distinct sal  from emp order by sal desc) e,dept d
+       where (e.deptno=d.deptno) 
+        group by d.deptno having rownum<=2;
+  
+
+select d.deptno,min(e.sal) from emp e,dept d
+       where (e.deptno=d.deptno) 
+         order by sal ;
+
+>> select dname,deptno from dept where deptno = (SELECT MAX(deptno) FROM Emp where deptno not in (select max(deptno) from emp));
+
+
+
+
+7) Write a query to display the employee name and primary competency of the employee who have maximum experience among all employees. (3 marks)
+
+   select e.emp_name,e.primary_competency,e.experience from employee e,project p,employee_allocation a 
+   where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id)
+   and 
+
+8) Write a query to display the name of the employees who are currently not allocated to any project. (2 marks)
+     
+     select e.emp_name
+     from employee e,project p,employee_allocation a 
+     where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id) and not in (p.proj_id); 
+
+9) Write a query to display the names ,primary and secondary competency of the employees who have joined in the month of April. (2 marks)
+      
+     select e.emp_name,e.primary_competency,e.secondary_competency
+     from employee e,project p,employee_allocation a 
+     where (e.emp_id=a.emp_id) and (p.proj_id=a.proj_id)
+     and to_char(date_join,'mon')='apr';
+
+10) Write a query to display name of the primary competency which is known by maximum number of employees. (3 marks)
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+ 

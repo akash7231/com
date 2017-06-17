@@ -1,0 +1,161 @@
+AIRPORT 
+create table tour1
+(
+tour_id number(8) constraint pk_tour_tour_id  primary key,
+tourname varchar2(9),
+cost number(8),
+no_of_days number(8),
+itinary_of_tour varchar2(9)
+);
+
+create table batch1
+(
+batch_id number(8) constraint p_k_batch_batch_id primary key,
+batch_name varchar2(8),
+no_of_seats number(8),
+no_of_seats_booked number(8),
+batch_coordinator varchar2(8)
+);
+
+
+create table booking2
+(
+customer_id number(8)  constraint prik_booking2_customer_id primary key,
+customer_name varchar2(8),
+batch_id number(8),constraint f_k foreign key(batch_id) references batch1(batch_id)
+);
+
+create table batch_tour1
+(
+batch_id number(8),constraint fk foreign key(batch_id)references batch(batch_id),
+tour_id  number(8),constraint for_key foreign key(tour_id) references tour(tour_id),
+Tour_start_date number(8)
+);
+
+
+MOVIE
+
+create table children1
+(
+child_id number(9) constraint pk_children1_child_id  primary key,
+child_name varchar2 (8),
+child_age number(8)
+);
+
+ create table parents1
+(
+parent_id number(8) constraint pr_ke_parents1_parent_id primary key,
+parents_name varchar2(8),
+mobile_num number(10),
+office_address varchar2(8),
+home_address varchar2(8)
+);
+
+create table wecare1
+(
+time_slot number(10) constraint prik_wecare1_time_slot primary key,
+food_facility varchar2(8),
+charge_per_tslot number (8)
+);
+
+create table subscription1
+(
+sl_no number(8) constraint prk_subscription1_sl_no primary key,
+time_slot number(8),constraint fek foreign key(time_slot) references wecare1(time_slot),
+child_id number(9), constraint fkey foreign key(child_id)  references children1(child_id),
+parent_id number(23),constraint fnk foreign key(parent_id) references parents1(parent_id)
+);
+
+HOSPITAL
+
+create table client1
+(
+client_id number(22) constraint client1_client_id primary key,
+client_name varchar2(44),
+client_address varchar2(33),
+contact_no number(10),
+identity_document varchar2(23)
+);
+
+create table room1
+(
+room_no number(22)  constraint room1_room_no primary key,
+room_type varchar2(22) constraint chck_room1_room_type check (room_type in('ac','non_ac','dormitory')),
+rate_per_day number(11),
+availability varchar2(4) constraint chek_room1_availability check (availability in('Y','N'))
+);
+
+create table billdetails1
+(
+sl_no number(8) constraint billdetails1_sl_no primary key,
+client_id number(22),constraint fky foreign key(client_id) references client(client_id),
+cin_date DATE,
+cout_date DATE,
+bill_amount number(8),
+p_method varchar2(9) constraint chk_billdetails1_p_method check (p_method in('cash','card','net_banking'))
+);
+
+create table booking3
+(
+client_id number(22),constraint frk foreign key(client_id)references client1(client_id),
+room_no number(22),constraint frkey foreign key(room_no)references room1(room_no),
+purpose_of_visit varchar2(22)
+);
+
+MUSIC ALBUM
+ 
+create table music_album_details1
+(
+album_id  number(8) constraint music_album_details_album_id primary key,
+album_name varchar2(11),
+release_date DATE,
+price number(9),
+Releasing_company varchar2(22)
+);
+  
+create table singers_details1
+(
+singer_id number(8) constraint singers_details1_singer_id primary key,
+singer_name varchar2(8),
+singer_address varchar2(8),
+gharana varchar2(8)
+);
+
+create table song_details1
+(
+song_id  number(8) constraint song_details1_song_id primary key,
+song_name varchar2(11),
+singer_id  number(8),constraint fnkey foreign key(singer_id) references singers_details1(singer_id),
+album_id number(8),constraint feky foreign key(album_id) references music_album_details1(album_id)
+);
+
+movie_details
+
+
+create table service_details
+(
+service_id  varchar2(8) constraint pk_service_id primary key,
+service_type varchar2(8) constraint  chk_service_dets_service_type check (service_type in ( 'GSM','GPRS','CDMA')),
+service_cost number(10)
+);
+
+
+
+create table customer9
+(
+customer_acc_no number(8,2)constraint  py_customer_acc_no primary key,
+customer_name varchar2(8),
+cus_address varchar2(8),
+sim_no number(8),
+service_id ,constraint fy foreign key(service_id) references service_details(service_id)
+);
+
+
+
+
+
+
+
+
+
+ 

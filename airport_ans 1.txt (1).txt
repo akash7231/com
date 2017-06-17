@@ -1,0 +1,122 @@
+Jai Shriram......
+
+1)
+
+SELECT UPPER(SUBSTR(P_NAME,1,4)),UPPER(SUBSTR(CITY,1,4)) FROM PASSENGERS;
+
+UPPER(SUBSTR(P_N UPPER(SUBSTR(CIT
+---------------- ----------------
+SONA             PUNE
+HARI             PUNE
+GHAN             MUMB
+RATN             MUMB
+LEEL             KOLK
+ROBI             CHEN
+SONA             CHEN
+
+***************************************************************************
+2)
+
+ SELECT AIRPORT_TYPE,COUNT(*) "No_Of_Flights" FROM AIRPORT 
+GROUP BY AIRPORT_TYPE;
+
+AIRPORT_TYPE    No_Of_Flights
+--------------- -------------
+General                     2
+Domestic                    3
+International               4
+
+*****************************************************************************
+3)
+
+SELECT SUM(NO_OF_SEATS) FROM FLIGHT_SCHEDULE;
+
+SUM(NO_OF_SEATS)
+----------------
+            1610
+
+******************************************************************************
+4)
+SELECT COUNT(1) "Not Confirmed" FROM TICKET_BOOKING WHERE RESERVATION_STATUS LIKE 'Waiting%';
+
+Not Confirmed
+-------------
+            3
+
+*****************************************************************************************
+
+5)
+SELECT EMAIL FROM PASSENGERS WHERE EMAIL LIKE '%.%@%.com';
+
+EMAIL
+------------------------------
+sonali.pathak@gmail.com
+hari.sadu@yahoo.com
+Robin.George@gmail.com
+
+******************************************************************************
+6)
+
+SELECT * FROM PASSENGERS WHERE P_ID IN(SELECT P_ID FROM TICKET_BOOKING 
+WHERE DATE_RESERVATION_MADE LIKE '%OCT%');
+
+P_ID       P_NAME                         EMAIL
+---------- ------------------------------ -----------------------
+--
+CITY            CONTACT_NO
+--------------- ----------
+PA001      Sonali                         sonali.pathak@gmail.com
+Pune            9824105322
+
+PA002      Hari                           hari.sadu@yahoo.com
+Pune            9824108322
+
+PA005      Leela                          Leela@gmail.com
+Kolkata         9824105562
+
+****************************************************************************************
+7) 
+select count(t.p_id) from ticket_booking t,flight_schedule f,airport a where t.schedule_id=f.schedule_id and f.source_airport_code=a.airport_code and a.airport_location='Mumbai';
+
+                                                                                      or
+
+select count(p_id) from ticket_booking where schedule_id in(select schedule_id from flight_schedule where source_airport_code in(select airport_code from airport where airport_location like 'Mumbai'));
+
+COUNT(P_ID)
+-----------
+          7
+
+*************************************************************
+
+9)
+
+select schedule_id,count(reservation_id)  tot_reservation from ticket_booking group by schedule_id order by 2 desc;
+
+SCHEDULE_I TOT_RESERVATION
+---------- ---------------
+SCH0001                  3
+SCH0005                  3
+SCH0002                  1
+SCH0004                  1
+
+/************************************
+
+10)
+INDEX
+
+
+The index is used to run the queries faster.
+
+if the optimizer detects an index that matches part of the WHERE clause of the query,
+then it uses the index to avoid having to read every row in the table.
+
+VIEW
+ a view is a virtual table based on the result set of an sql statement.
+ a view contains rows and columns ,just like a real table.'
+ the fields  in a view are fields from one or more real tables in the database.
+ You can add sql functions,WHERE,and join statements to view and present the data as if the data were coming from a single table.
+
+data file:
+Data Files contains the data of the database. Every table that is stored in the database is a part of these files. Only Oracle Server can interpret these data files.
+
+

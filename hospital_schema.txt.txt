@@ -1,0 +1,38 @@
+(8).====================SCENARIO BASED=====================
+
+
+TABLE CLIENT_DETAILS
+TABLE ROOMS
+TABLE BILL_DETAILS
+
+
+create table client_details
+(
+client_name char(20),
+address varchar(50),
+contact_no number(10),
+purpose char(20),
+client_id varchar(20) primary key,
+checkin_date date
+);
+
+
+create table rooms
+(
+client_id varchar(20) references client_details(client_id),
+room_id varchar(20) primary key,
+room_type char check(room_type in('ac','non-ac','dormitory')),
+rate_per_day number(5,2)
+--avilability char check (availability in ('Y','N'))
+);
+
+create table bill_details
+(
+bill_no number primary key,
+room_id varchar(20) references rooms(room_id),
+client_id varchar(20) references client_details(client_id),
+checkout_date date,
+book_days number(3),
+bill_amt number(5,2), 
+payment_method char(20) check (payment_method in ('cash','debit','credit','net banking'))
+);

@@ -1,0 +1,110 @@
+subquery
+
+select .... from tableName
+where  columnName =(select ...from tableName)
+
+
+
+
+select last_name ,salary from employees 
+where salary > (select salary from employees
+            where last_name='Gates')  
+
+----------------------------------------------------
+select last_name  from employees 
+where job_id in (
+select job_id from employees 
+where last_name='Gates' or last_name='Grant')
+
+
+ > any means more than min value
+ < any means less than max value
+ > all means more than max value
+ < all means less than min value
+
+SELECT last_name, salary FROM employees 
+WHERE salary < ANY (SELECT salary FROM employees WHERE department_id = 30)
+
+
+SELECT last_name, salary FROM employees 
+WHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 30)
+
+
+
+
+   SELECT last_name, salary FROM Employees WHERE salary > ALL
+    (SELECT salary FROM employees WHERE department_id = 30)
+
+
+
+ SELECT last_name, salary FROM Employees WHERE salary < ALL
+    (SELECT salary FROM employees WHERE department_id = 30)
+
+--------------------------------------------------------
+select e.employee_id,e.last_name e.MANAGER_ID from employees e
+
+exixts subquery
+
+select e.last_name from employees e
+where exists (select * from employees m where m. MANAGER_ID =e.employee_id ) 
+
+
+select e.last_name from employees e
+where not  exists (select * from employees m where m. MANAGER_ID =e.employee_id ) 
+
+emp                                 
+empno ename sal   deptno    mgrid        
+100    AA   2000   10                   
+101    BB   4000   20       100           
+102    CC   5000   10       100          
+103    DD   2500   10       101            
+104    EE   2000   30       101 
+105    FF   6000   20       100
+
+select ename from emp  e
+where exixts (select * from emp m where m.mgrid=e.empno)
+                                                  
+
+o/p
+ename
+AA
+BB
+
+select ename from emp  e
+where not exixts (select * from emp m where m.mgrid=e.empno)
+                                                  
+
+o/p
+ename
+CC
+DD
+EE
+FF
+------------------------------------------------------
+
+co-related subquery
+
+select last_name, salary from employees e
+where salary > (select min(salary) from employees where department_id=e.department_id)
+
+
+
+
+emp                                 
+empno ename sal   deptno    mgrid        
+100    AA   2000   10                   
+101    BB   4000   20       100           
+102    CC   5000   10       100          
+103    DD   2500   10       101            
+104    EE   2000   30       101 
+105    FF   6000   20       100
+
+select ename, sal from emp e
+where sal > (select min(sal) from emp where deptno=e.deptno)
+                
+o/p
+ename  sal
+ CC   5000 
+DD   2500
+ FF   6000 
+

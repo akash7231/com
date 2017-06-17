@@ -1,0 +1,82 @@
+
+DROP TABLE ticket_booking cascade constraint;
+DROP TABLE flight_schedule cascade constraint;
+DROP TABLE passengers cascade constraint;
+DROP TABLE airport cascade constraint;
+
+CREATE TABLE airport
+(
+airport_code varchar(10) PRIMARY KEY,
+airport_name varchar(30), 
+airport_location varchar(10),
+airport_type varchar(15) 
+);
+
+CREATE TABLE flight_schedule
+(
+schedule_id varchar(10) PRIMARY KEY,
+departure_date date,
+arrival_date date,
+source_airport_code varchar(10) REFERENCES airport(airport_code),
+destination_airport_code varchar(10) REFERENCES airport(airport_code),
+no_of_seats number(3)
+);
+
+
+CREATE TABLE passengers
+(
+p_id varchar(10) PRIMARY KEY,
+p_name varchar(30), 
+email varchar(30),
+city varchar(15),
+contact_no number(11)
+);
+
+
+CREATE TABLE ticket_booking
+(
+reservation_id varchar(10) PRIMARY KEY,
+schedule_id varchar(10) REFERENCES flight_schedule(schedule_id),
+p_id varchar(10) REFERENCES passengers(p_id),
+reservation_status varchar(10), 
+date_reservation_made date,
+fare number(8,2)
+);
+
+insert into airport values ('AIR0001','Sahara','Mumbai','International');
+insert into airport values ('AIR0002','Dumdum','Kolkata','General');
+insert into airport values ('AIR0003','Rajiv Gandhi Airport ','Hyderabad','International');
+insert into airport values ('AIR0004','Chandigarh International port','Chandigarh','International');
+insert into airport values ('AIR0005','Lohegaon Airport','Pune','Domestic');
+insert into airport values ('AIR0006','Madurai Airport','Madurai','General');
+insert into airport values ('AIR0007','Hindustan Airport','Bangalore','Domestic');
+insert into airport values ('AIR0008','Vimanapura Airbase','Bangalore','International');
+insert into airport values ('AIR0009','Juhu Aerodrome','Mumbai','Domestic');
+
+insert into flight_schedule values ('SCH0001','10-OCT-09','10-OCT-09','AIR0001','AIR0002',230);
+insert into flight_schedule values ('SCH0002','23-OCT-09','24-OCT-09','AIR0001','AIR0003',230);
+insert into flight_schedule values ('SCH0003','23-NOV-09','24-NOV-09','AIR0002','AIR0004',230);
+insert into flight_schedule values ('SCH0004','03-DEC-09','3-DEC-09','AIR0007','AIR0009',230);
+insert into flight_schedule values ('SCH0005','23-JAN-10','23-JAN-10','AIR0009','AIR0007',230);
+insert into flight_schedule values ('SCH0006','15-NOV-09','16-NOV-09','AIR0006','AIR0007',230);
+insert into flight_schedule values ('SCH0007','30-NOV-09','23-NOV-09','AIR0003','AIR0004',230);
+
+insert into passengers values ('PA001','Sonali','sonali.pathak@gmail.com','Pune',9824105322);
+insert into passengers values ('PA002','Hari','hari.sadu@yahoo.com','Pune',9824108322);
+insert into passengers values ('PA003','Ghanshyam','Ghanshyam@gmail.com','Mumbai',9924885322);
+insert into passengers values ('PA004','Ratna','Ratna@yahoo.com','Mumbai',9824153552);
+insert into passengers values ('PA005','Leela','Leela@gmail.com','Kolkata',9824105562);
+insert into passengers values ('PA006','Robin','Robin.George@gmail.com','Chennai',9041032782);
+insert into passengers values ('PA007','Sonam','Sonam@yahoo.com','Chennai',9024105322);
+
+insert into ticket_booking values ('R0001','SCH0001','PA001','Waiting','04-OCT-09',1000);
+insert into ticket_booking values ('R0002','SCH0001','PA002','Confirm','04-OCT-09',1000);
+insert into ticket_booking values ('R0003','SCH0002','PA001','Confirm','04-OCT-09',1500);
+insert into ticket_booking values ('R0004','SCH0004','PA004','Waiting','1-NOV-09',1500);
+insert into ticket_booking values ('R0005','SCH0005','PA003','Confirm','20-DEC-09',2000);
+insert into ticket_booking values ('R0006','SCH0001','PA005','Waiting','04-OCT-09',1000);
+insert into ticket_booking values ('R0007','SCH0005','PA002','Confirm','04-JAN-10',2000);
+insert into ticket_booking values ('R0008','SCH0005','PA001','Confirm','02-JAN-10',2000);
+
+commit;
+

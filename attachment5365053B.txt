@@ -1,0 +1,368 @@
+select from where
+order by
+
+in 
+is null 
+is not null
+between
+like
+
+
+select * from employees
+where department_id=10 or salary >5000
+
+||
+
+select last_name ||' '|| first_name  "full Name" from employees 
+order by  "full Name";
+
+
+emp
+empno  name sal  comm
+100    AAA  3000  0.5
+101    BBB  2000   
+102    CCC  3000  0.3
+
+
+select sal+nvl(comm,0) from emp;
+
+sal+comm
+3000.5
+2000   
+3000.3
+
+
+select round(45.6) from dual;-->46
+
+select round(45.4) from dual;  -->45 
+select round(45.667,2) from dual;-->45.67
+
+select round(45.667,1) from dual;-->45.7
+select round(45.627,1) from dual;-->45.6
+
+select round(45.667,-1) from dual;-->50
+select round(45.667,-2) from dual; -->0
+---------------------------------------
+select trunc(45.6) from dual;-->45
+
+select trunc(45.4) from dual;  -->45 
+select trunc(45.667,2) from dual;-->45.66
+
+select trunc(45.667,1) from dual;-->45.6
+select trunc(45.627,1) from dual;-->45.6
+
+select trunc(45.667,-1) from dual;-->40
+select trunc(45.667,-2) from dual; -->0
+
+select concat(concat(first_name,' '),last_name) from employees;
+
+
+select length(first_name ) from employees;
+
+select first_name, substr(first_name,2 ,3) from employees;
+
+
+select instr('hello world', 'e')  from dual;
+select instr('hello world', 'l',5)  from dual;
+
+select instr('hello world', 'l',1,3)  from dual;
+select instr('hello world', 'l',1,2)  from dual;
+
+select instr('hello world', 'l',5,2)  from dual;
+
+select first_name, instr(first_name,'t') from employees;
+
+
+select to_char(sysdate, 'ddspth "of" MON year') from dual;
+
+select to_char(sysdate, 'ddspth "of" MONth yyyy hh:mi:ss') from dual;
+
+select to_number('123') from dual;
+
+
+select to_date('12-Mar-2017') + 1 from dual;
+
+
+select to_date('12-Mar-2017') -to_date('12-Mar-2014') from dual;
+
+
+select (to_date('12-Mar-2017') -to_date('12-Mar-2014'))/365 from dual;
+
+
+select to_char(hire_date, 'yyyy') from employees;
+
+
+------------------------------
+
+multiple row functions
+
+max, min, sum,avg,count
+
+
+select max(salary) from employees;
+
+select max(salary) ,min (salary),avg(salary),sum(salary) from employees;
+
+
+
+select  department_id,max(salary) from employees
+where department_id is not null
+ group by department_id;
+
+
+select max(salary) from employees
+where department_id is not null
+ group by department_id
+ having max(salary) >10000
+
+
+select max(salary) from employees
+where department_id is not null
+ group by department_id
+ having max(salary) >10000
+order by 1
+
+
+-------------------------------------------------
+count(*) -->returns numbers of rows
+count(column)
+count(distinct column)
+
+select count(*) from employees;
+
+select count(department_id) from employees;
+
+select count(distinct department_id) from employees;
+select count(distinct nvl(department_id,0)) from employees;
+
+
+
+
+select department_id,JOB_ID  , max(salary) from employees
+where department_id is not null
+group by rollup(department_id,JOB_ID    )
+
+
+select department_id,JOB_ID  , max(salary) from employees
+where department_id is not null
+group by cube(department_id,JOB_ID    )
+-----------------------------------------------------
+
+rollup(a,b)
+a,b-->o/p
+a-->o/p
+grand total
+
+cube(a,b)
+grand total
+a,b
+a
+b
+------------------------------------------------
+joins
+fetch data from more than one table
+
+emp                                 dept
+empno ename sal   deptno             deptno  dname
+100    AA   2000   10                  10     HR
+101    BB   4000   20                  20     IT
+102    CC   5000   10                  30     Sales
+103    DD   2500                       40     marketing
+104    EE   2000   30
+105    FF   6000   20 
+
+
+n  tables   join conditions will be n-1
+-->equi join
+select ename,sal,dname from emp e,dept d
+where e.deptno=d.deptno
+     
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+----------------------------------
+
+
+
+select first_name,salary,department_name,city 
+from employees e , departments d , locations l
+where e.department_id=d.department_id 
+  and d.location_id=l.location_id 
+
+
+select first_name,salary,country_name 
+from employees e , departments d , locations l, countries c
+where e.department_id=d.department_id 
+  and d.location_id=l.location_id and
+  l.country_id=c.country_id
+
+
+
+
+select first_name,country_name,region_name 
+from employees e , departments d , locations l, 
+countries c, regions r
+where e.department_id=d.department_id 
+  and d.location_id=l.location_id and
+  l.country_id=c.country_id and
+  c.region_id=r.region_id
+---------------------------------------------------------
+-->outer join
+emp                                 dept
+empno ename sal   deptno             deptno  dname
+100    AA   2000   10                  10     HR
+101    BB   4000   20                  20     IT
+102    CC   5000   10                  30     Sales
+103    DD   2500                       40     marketing
+104    EE   2000   30
+105    FF   6000   20 
+
+
+----------------------------------------------
+
+select ename,sal,dname from emp e left outer join dept d
+on( e.deptno=d.deptno)
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+DD   2500  
+select ename,sal,dname from emp e right outer join dept d
+on( e.deptno=d.deptno)
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+               marketing
+
+select ename,sal,dname from emp e full outer join dept d
+on( e.deptno=d.deptno)
+
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+DD   2500  
+               marketing
+--------------------------------------
+outer join with +
+
+select ename,sal,dname from emp e,dept d
+where e.deptno=d.deptno(+)
+
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+DD   2500
+select ename,sal,dname from emp e,dept d
+where e.deptno(+)=d.deptno
+o/p
+ename   sal  dname
+  AA   2000    HR
+ BB   4000     IT
+ BB   4000     HR
+ BB   4000     Sales
+FF   6000      IT
+-     -        marketing
+------------------------------------------------
+
+emp                                 dept
+empno ename sal   deptno             deptno  dname
+100    AA   2000   10                  10     HR
+101    BB   4000                       20     IT
+102    CC   5000   20                  30     Sales
+103    DD   2500                       40     marketing
+
+select ename,sal,dname from emp e,dept d
+where e.deptno=d.deptno(+)
+
+o/p
+ename   sal  dname
+AA   2000     HR
+CC   5000     IT 
+ BB   4000
+ DD   2500
+select ename,sal,dname from emp e,dept d
+where e.deptno(+)=d.deptno
+o/p
+ename   sal  dname
+AA   2000     HR
+CC   5000     IT 
+             Sales
+             marketing  
+
+
+
+----------------------------------------------
+-->non-equi join
+
+emp                                 salgrade
+empno ename sal   deptno             grade  lowsal highsal
+100    AA   2000   10                 U1    100      2000 
+101    BB   4000   20                 U2    2001     4000 
+102    CC   5000   10                 U3    4001     5000  
+103    DD   2500   10                 U4    5001     8000
+104    EE          30
+105    FF   6000   20 
+
+select ename , sal, grade from emp e , salgrade g
+where sal between lowsal and highsal;
+
+select ename , sal, grade from emp e , salgrade g
+where sal >= lowsal and sal<= highsal;
+
+o/p
+ename sal grade
+AA   2000  U1
+BB   4000  U2
+ CC   5000  U3
+ DD   2500  U2
+FF   6000   U4 
+------------------------------------------------------
+
+-->self join
+emp                                 
+empno ename sal   deptno    mgrid        
+100    AA   2000   10                   
+101    BB   4000   20       100           
+102    CC   5000   10       100          
+103    DD   2500   10       101            
+104    EE   2000   30       101 
+105    FF   6000   20       100
+
+select e.ename || 'has manager '||m.ename  result 
+from emp e, emp m
+where e.mgrid =m.empno;
+       101
+o/p
+result
+BB  has manager AA
+CC has manager AA
+DD has manager BB
+EE has manager BB
+FF has manager AA
+
+
+
+
+
+
+
+

@@ -1,0 +1,69 @@
+Theatre:
+
+
+
+1. Display the total no of movies booked in morning show in all theatres.
+
+A.
+  select count(distinct movie_id) from booking where show_id in (select show_id from show where show_name='Morning show');
+
+2. Display theatre name where maximum tickets are booked.
+A.
+select * from(select B.theartre_id,T.theatre_name from bookings B,theatre T where T.theatre_id=B.theartre_id order by sum(no_of_tickets)) where rownum<=1;
+
+select b.theartre_id,theatre_name,sum(no_of_tickets)  from bookings b,theatre t where b.theartre_id=t.theatre_id group by b.theartre_id, theatre_name having sum(no_of_tickets) in(select max(sum(no_of_tickets)) from bookings group by theartre_id);
+ 
+\\10.53.110.82
+\\10.23.130.162
+
+3. Display name of all the movies booked after 15 july 2013 order by booking_date.
+
+select movie_name,booking_date from Movie_details M,booking B where M.movie_id=B.movie_id AND B.booking_date>'15-jul-2013' order by B.booking_date;
+
+4. Display all theatre names where 'paramathma' movie is booked.
+select theatre_name from theatre where theatre_id in(select theartre_id from booking where movie_id in(select movie_id from movie_details where movie_name='Paramathma'));
+
+5.Display the booking details having booking_date same as movie '30 minutes or less'.
+
+select * from booking where booking_date IN(select booking_date from booking where movie_id IN(select movie_id from movie_details where movie_name='30 Minutes or Less'));
+
+6.
+Display total no of shows scheduled in every theatre.
+
+select S.theartre_id,T.theatre_name,S.num from theatre T,(select theartre_id,count(show_id) num from bookings group by theartre_id) S where S.theartre_id=T.theatre_id;
+
+ 
+8.
+Write query to display the name ,address,locality of the theatre where not a single movie booked.
+select theatre_name,address,locality,city from theatre where theatre_id NOT IN(select theartre_id from bookings); 
+
+
+
+
+
+
+CREATE TABLE PARENT(
+	PID NUMBER(5) primary key,
+	PNAME VARCHAR2(15),
+	OFF_ADDRESS VARCHAR2(20),
+	HOME_ADDRESS VARCHAR2(20),
+	CNCT_NO NUMBER(10)
+);
+
+
+CREATE TABLE CHILD(
+	CID NUMBER(5) PRIMARY KEY,
+	PID NUMBER(5) REFERENCES PARENT(PID),
+	CNAME VARCHAR2(20) NOT NULL,
+	CDATE DATE,
+	CIN_TIME VARCHAR2(20),
+	COUT_TIME VARCHAR2(20),
+	FOOD_FAC VARCHAR2(20)
+);
+
+
+CREATE TABLE WECARE(
+	CID NUMBER(5) REFERENCES CHILD(CID),
+	CHARGE NUMBER(6),
+	FACILITIES VARCHAR2(20) NOT NULL
+);

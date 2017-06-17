@@ -1,0 +1,128 @@
+An PDFC Bank keeps track of all its, branch, customer and account details. One customer can have more than one account. It also maintains details of the transactions made by the customer. Account can have multiple transactions of credit and debits. Transactions details are date of transaction, type of transaction (credit/debit)  ,amount etc. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+BRANCH
+CUSTOMER
+ACCOUNT 
+TRANSACTION
+  CREATE TABLE BRANCH
+(BRANCH_ID NUMBER(3) PRIMARY KEY,
+BNAME VARCHAR2(10) NOT NULL,
+LOC VARCHAR2(20) NOT NULL,
+MANAGER VARCHAR(40)
+) ;
+CREATE TABLE CUSTOMER
+(CUST_ID NUMBER(4) PRIMARY KEY,
+CNAME VARCHAR2(30) NOT NULL,
+ADDRESS VARCHAR2(50) NOT NULL,
+CONTACT NUMBER(10)
+) ;
+CREATE TABLE ACCOUNT
+(ACCOUNT_NUMBER NUMBER(10) PRIMARY KEY,
+ACCOUNT_TYPE CHAR CHECK (ACCOUNT_TYPE IN ('S','C','F','R')),
+BALANCE NUMBER(10) NOT NULL CHECK (BALANCE >= 1000),
+CUST_ID NUMBER(4) REFERENCES CUSTOMER(CUST_ID),
+BRANCH_ID NUMBER(3) REFERENCES BRANCH(BRANCH_ID)
+) ;
+CREATE TABLE TRANSACTION
+(TR_ID NUMBER(6) PRIMARY KEY,
+TR_DATE DATE DEFAULT SYSDATE,
+TR_TYPE CHAR(2) CHECK (TR_TYPE IN('CR','DR')),
+AMOUNT NUMBER(10) CHECK (AMOUNT > 0),
+ACCOUNT_NUMBER NUMBER(10),
+FOREIGN KEY (ACCOUNT_NUMBER) REFERENCES ACCOUNT (ACCOUNT_NUMBER)
+);
+
+----DML-----
+INSERT INTO BRANCH
+VALUES(101,'PHASE III','HINJEWADI',9595276172,'GAURITA');
+INSERT INTO CUSTOMER
+VALUES(2021,'ANKITA','PUNE',8446258587);
+INSERT INTO ACCOUNT
+VALUES(4459101136,'S',20000,2021,101);
+INSERT INTO TRANSACTION
+VALUES(300001,'03-FEB-17','DR',210000,4459101136);
+
+
+
+------------------------------------------------------------------------------------------
+A road transport office keeps the information of the all vehicles and persons who owns the vehicles. It also keeps the records of their accidents. Each person can own one or more cars. It also maintains the accident information about the cars like date of accident, damage amount, insurance claimed or not, insurance amount etc. One car can undergo more than one accident. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+CREATE TABLE OWNER
+(CUST_ID NUMBER(10) PRIMARY KEY,
+CUST_NAME VARCHAR(20) NOT NULL,
+CUST_ADDRESS VARCHAR(100) NOT NULL,
+CONTACT NUMBER(10) NOT NULL
+) ;
+
+CREATE TABLE ACCIDENT
+(ACC_ID NUMBER(10) PRIMARY KEY,
+ACC_DATE DATE DEFAULT SYSDATE,
+DAMAGE_AMOUNT NUMBER(10) NOT NULL,
+INSURANCE_CLAIMED VARCHAR2(1) CHECK(INSURANCE_CLAIMED IN('Y','N')),
+INSURANCE_AMOUNT NUMBER(10) NOT NULL,
+CUST_ID NUMBER(10) REFERENCES OWNER(CUST_ID)
+) ;
+
+CREATE TABLE VEHICLE
+( VEHICLE_NUMBER VARCHAR2(10) PRIMARY KEY,
+VEHICLE_TYPE CHAR(3) CHECK(VEHICLE_TYPE IN ('SUV','LMV','OTH')),
+ACC_ID NUMBER(10) REFERENCES ACCIDENT(ACC_ID),
+CUST_ID NUMBER(10) REFERENCES OWNER(CUST_ID)
+) ;
+-------------------------------------------------------------------------------------
+A travel agency keeps the information of the all vehicles which it gives on rent and records of their customers and drivers. Customer and vehicle details are maintained. It maintains vehicle rent details like which vehicle is given on rent, to whom, start and end date and rent of that vehicle.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database
+
+
+
+CREATE TABLE CUST
+(CUST_ID NUMBER(10) PRIMARY KEY,
+CUST_NAME VARCHAR(20) NOT NULL,
+CUST_ADDRESS VARCHAR(100) NOT NULL,
+CONTACT NUMBER(10) NOT NULL
+) ;
+CREATE TABLE DRIVER
+(DRI_ID NUMBER(10) PRIMARY KEY,
+DRI_NAME VARCHAR(20) NOT NULL,
+DRI_ADDRESS VARCHAR(100) NOT NULL,
+CONTACT NUMBER(10) NOT NULL
+) ;
+
+
+CREATE TABLE VEHICLE112
+(VEHICLE_NUMBER VARCHAR2(10) PRIMARY KEY,
+VEHICLE_TYPE CHAR(3) CHECK(VEHICLE_TYPE IN ('SUV','LMV','OTH')),
+VEHICLE_RENT NUMBER(10) NOT NULL,
+SD DATE DEFAULT SYSDATE,
+ED DATE DEFAULT SYSDATE NOT NULL,
+CUST_ID NUMBER(10) REFERENCES CUST(CUST_ID)
+) ;
+
+----------------------------------------------------------------------------------
+The shop keeper records the information of the products, product orders and their customers. Customers can place multiple orders and an order can be raised for multiple products. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+CREATE TABLE CUSTOMER11
+(CUST_ID NUMBER(10) PRIMARY KEY,
+CUST_NAME VARCHAR(20) NOT NULL,
+CUST_ADDRESS VARCHAR(100) NOT NULL,
+CONTACT NUMBER(10) NOT NULL
+) ;
+
+CREATE TABLE PRODUCT
+(PRODUCT_ID NUMBER(10) PRIMARY KEY,
+PRODUCT_NAME VARCHAR(10) NOT NULL,
+CUST_ID NUMBER(10) REFERENCES CUSTOMER11(CUST_ID)
+);
+
+CREATE TABLE ORDERLIST
+(ORDER_ID NUMBER(10),
+CUST_ID NUMBER(10) REFERENCES CUSTOMER11(CUST_ID),
+PRODUCT_ID NUMBER(10) REFERENCES PRODUCT(PRODUCT_ID)
+);
+
+---------------------------------------------------------------------------------------------
+A Real Estate agency records the transactions where the builder sells property to a buyer through an agent. It keeps records of builders, Agents, buyers and transactions of the properties. A customer can purchase the property from buyer or agents. When property is purchased from the agent then agent gets commission from buyer or builder or both. Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+

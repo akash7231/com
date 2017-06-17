@@ -1,0 +1,131 @@
+1)Display total amount of bill received by hospital
+
+
+SQL> select sum(total_bill_amt) from patient;
+
+SUM(TOTAL_BILL_AMT)
+-------------------
+             133560
+*****************************************************************************************
+2)  select p.patient_id,p.patient_name,p.enrollment_dt,t.test_name,pl.observations,d.doctor_id from patient p,test t,doctors d,patient_log pl 
+where p.patient_id=pl.patient_id and d.doctor_id=t.doctor_id and t.test_id=pl.test_id;
+
+
+PATIENT_ID PATIENT_NAME         ENROLLMEN TEST_NAME
+---------- -------------------- --------- --------------------
+OBSERVATIONS                                        DOCTOR_ID
+-------------------------------------------------- ----------
+       101 sai                  15-JUN-16 ecg
+problem                                                    78
+
+************************************************************************************************************
+3) select doctor_id,count(1) from test group by doctor_id;
+
+
+ DOCTOR_ID   COUNT(1)
+---------- ----------
+        78          1
+       123          2
+       100          1
+        20          2
+      1234          1
+        33          1
+        67          2
+***************************************************************************************************
+4) select * from patient where months_between(discharge_dt,enrollment_dt) >1;
+
+PATIENT_ID PATIENT_NAME         ADDRESS                              PHONE_NUM
+---------- -------------------- ----------------------------------- ----------
+ENROLLMEN DISCHARGE TOTAL_BILL_AMT
+--------- --------- --------------
+       101 sai                  hyd                                   98456780
+15-JUN-16 05-NOV-17          90000
+
+       103 amy                  bbsr                                  98452780
+05-JAN-89 08-FEB-89          15000
+
+       105 roli                 chennai                               98451780
+12-MAR-80 18-APR-80           8000
+
+
+*****************************************************************************************
+5) select pl.patient_id,pl.test_id,pl.observations,t.doctor_id from patient_log pl,test t where t.test_id(+)=pl.test_id;
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        853 problem
+        78
+
+       103        852 weak
+      1234
+
+       104        852 improved
+      1234
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        852 good
+      1234
+
+       103        852
+      1234
+
+       104        852
+      1234
+
+
+PATIENT_ID    TEST_ID OBSERVATIONS
+---------- ---------- --------------------------------------------------
+ DOCTOR_ID
+----------
+       101        852
+      1234
+
+       105            no problem
+
+
+       109
+********************************************************************************************************
+
+6)  SQL> select patient_id,patient_name,address from patient where patient_id in(select patient_id from patient_log
+    where test_id in(select test_id from test where test_name='ecg'));
+
+PATIENT_ID PATIENT_NAME         ADDRESS
+---------- -------------------- -----------------------------------
+       101 sai                  hyd
+
+**********************************************************************************
+
+7) select doctor_id from doctors where doctor_id not in(select doctor_id from test)
+
+ DOCTOR_ID
+----------
+       546
+        65
+                                                    
+                                                                               OR...
+
+Co-releated output:-----
+
+select doctor_id from doctors d where not exists(select doctor_id from test where doctor_id =d.doctor_id) ;
+
+ DOCTOR_ID
+----------
+       546
+        65
+*************************************************************************************
+Note :-- Have to use co-releated query....  try to do it as que asked
+Rough work....
+
+select doctor_id from doctors d where doctor_id in(select doctor_id from test where doctor_id = d.doctor_id) 
+
+
+select doctor_id from doctors d where  exists(select doctor_id from test where doctor_id = d.doctor_id) 
+
+select doctor_id from doctors d where count(doctor_id) in(select doctor_id from test where doctor_id <> d.doctor_id) 

@@ -1,0 +1,64 @@
+1.select faculty_name from faculty_info where dept_id in(select dept_id from faculty_info where faculty_name='Aamir') and faculty_name!='Aamir';
+
+
+2.select dept_name,faculty_name FROM faculty_info f, paper_info p, dept_info d WHERE f.dept_id=d.dept_id and  f.faculty_id=p.faculty_id(+);
+
+
+3. SELECT course_id,course_name FROM course_info WHERE course_type = 'Regular'  AND course_id IN(SELECT course_id FROM paper_info WHERE paper_status = 'Finalized');
+
+4.select faculty_name from faculty_info where faculty_id IN ( select faculty_id from paper_info group by faculty_id having count(paper_id)=(select max(count(paper_id)) from paper_info group by faculty_id));
+
+
+5)select p.course_id,c.dept_id,count(p.paper_id) from course_info c,paper_info p where p.paper_status='Submitted' and p.course_id=c.course_id group by p.course_id,c.dept_id order by c.dept_id;
+
+6))))
+
+create table group_stu
+(
+group_id number(5) constraint pk1 primary key,
+group_name char(10),
+group_leader char(10)
+ );
+
+create table event
+(
+event_id number(5) constraint pk2 primary key,
+event_name char(20),
+credit_value number(5)
+);
+
+create table student
+(
+student_id number(10) constraint  pk3 primary key,
+student_name char(10),
+student_age number(3),
+group_id number(3),
+constraint fk2 foreign key(group_id) references group_stu(group_id)
+);
+
+
+create table result
+(
+group_id number(5),
+constraint fk3 foreign key(group_id) references group_stu(group_id),
+event_id number(5),
+constraint fk4 foreign key(event_id) references event(event_id),
+result_in_event varchar2(20)
+);
+
+
+7.select * from faculty_info where dept_id in (select dept_id from dept_info where dept_name ='MBA');
+
+8)   A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.
+
+A foreign key with cascade delete can be created using either a CREATE TABLE statement or an ALTER TABLE statement.
+
+
+
+9.select p.paper_id,f.faculty_name from paper_info p,faculty_info f 
+where p.faculty_id=f.faculty_id and months_between(sysdate,submission_date)>2 
+and paper_status not like 'Finalized'; 
+
+
+10. select faculty_name from faculty_info where faculty_id not in 
+(select faculty_id from paper_info);

@@ -1,0 +1,70 @@
+An PDFC Bank keeps track of all its, branch, customer and account details. One customer can have more than one account. It also maintains details of the transactions made by the customer. Account can have multiple transactions of credit and debits. Transactions details are date of transaction, type of transaction (credit/debit) ,amount etc.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+
+BRANCH 
+CUSTOMER
+ACCOUNT
+TRANSACTION
+
+
+CREATE TABLE BRANCH
+(BRANCH_ID NUMBER(3) PRIMARY KEY,
+ BRANCH_NAME VARCHAR2(10) NOT NULL, 
+ LOC VARCHAR2(20) NOT NULL,
+ CONTACT_NO NUMBER(10),
+ MANAGER VARCHAR2(30)
+);
+
+
+CREATE TABLE CUSTOMER
+(CUST_ID NUMBER(4) PRIMARY KEY,
+ C_NAME VARCHAR2(20) NOT NULL,
+ ADDRESS VARCHAR2(50) NOT NULL,
+ CONTACT_NO VARCHAR2(10)
+);
+
+CREATE TABLE ACCOUNT
+(AC_NO NUMBER(10) PRIMARY KEY,
+ AC_TYPE CHAR CHECK (AC_TYPE IN ('S','C','R','F')),
+ BALANCE NUMBER(10) NOT NULL CHECK(BALANCE > =1000),
+ CUST_ID NUMBER(4) REFERENCES CUSTOMER(CUST_ID),
+ BRANCH_ID NUMBER(3) REFERENCES BRANCH(BRANCH_ID)
+);
+
+CREATE TABLE TRANSACTION 
+(TR_ID NUMBER(6) PRIMARY KEY,
+ TR_DT DATE DEFAULT SYSDATE,
+ TR_TYPE CHAR(2) CHECK (TR_TYPE IN ('CR','DR')),
+ AMOUNT NUMBER(10) CHECK (AMOUNT >0),
+ AC_NO NUMBER(10),
+ FOREIGN KEY(AC_NO) REFERENCES ACCOUNT(AC_NO)
+);
+
+=========================================================================================
+
+
+INSERT INTO BRANCH
+VALUES(101,'PHASE III','HINJEWADI',2567432,'PRANALI');
+
+INSERT INTO CUSTOMER
+VALUES(2001,'PRANALI','NAGPUR',9876543210);
+
+INSERT INTO ACCOUNT
+VALUES(1234567890,'S',2000,2001,101);
+
+INSERT INTO TRANSACTION
+VALUES(123456,'17-AUG-1995','CR',1000,1234567890);
+
+==============================================================================================
+
+A road transport office keeps the information of the all vehicles and persons who owns the vehicles. It also keeps the records of their accidents. Each person can own one or more cars. It also maintains the accident information about the cars like date of accident, damage amount, insurance claimed or not, insurance amount etc. One car can undergo more than one accident.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,242 @@
+TABLES
+
+STAFF_DETAILS
+-------------
+
+create table staff_details_480091(
+id number constraint sd_pk primary key,
+fname varchar2(50) not null,
+mname varchar2(50),
+lname varchar2(50),
+password varchar2(50) not null check(length(password)>=8),
+DOB  date not null,
+address varchar2(100) not null,
+contact number(10) check (length(contact)=10) not null,
+gender char(1) check(upper(gender) in ('M','F','O')) not null,
+PAN_number varchar(10) not null,
+designation varchar(10) check(upper(designation) in('STAFF','ADMIN')) not null
+);
+
+
+CENTRAL_DRUG_STORE
+------------------
+
+create table central_store_480091(
+med_id number constraint cts_pk primary key,
+med_name varchar(100) not null,
+quantity number not null,
+exp_date date not null,
+rate number(10,2)
+);
+
+
+
+MEDICINE_DETAILS
+----------------
+
+create table medicine_details_480091(
+med_id number constraint md_fk references med_info_480091(med_id),
+batch_id varchar2(50) not null,
+quantity number(10) not null,
+exp_date date not null,
+shelf_num number(10) not null,
+constraint md_pk primary key(med_id,batch_id)
+);
+
+create table billing_info_480091(
+s_no number constraint bi_pk primary key,
+patient_name varchar(100) not null,
+doc_name varchar(100) not null,
+Billing_Date date not null  ,
+med_name varchar(100),
+quantity number not null,
+rate number(10,2) not null,
+total number not null,
+service_tax number(10,2) not null,
+total_price number(10,2) not null 
+)
+
+create table sales_report_480091(
+sl_no number constraint sno_pk primary key,
+med_id number not null constraint id_fk references med_info_480091(med_id),
+quantity_sold number not null,
+sale_date date not null 
+)
+create table med_info_480091(
+med_id number ,
+med_name varchar(100) not null,
+rate number(10,2) not null,
+constraint med_pk primary key(med_id) 
+)
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+
+
+create or replace procedure med_info(med_name varchar2,rate number)
+is
+price_exc exception;
+med_exc exception;
+begin
+select med_id into v_id from med_info where med_name=med_name;
+
+if(med_name is not null) then
+	if(rate is not null) then
+		insert into med_info_480091 values(sq_cs.nextval,med_name,rate);
+	else 
+		raise price_exc;
+	end if;
+else 
+	raise med_exc;
+end if;
+		
+exception
+
+when price_exc then
+  dbms_output.put_line('Enter valid price');
+ when med_exc then
+  dbms_output.put_line('Enter valid medicine name');
+end;
+
+---------------------------------------------------------------------
+declare
+med_name varchar(100);
+rate number(10,2);
+batch_id varchar2(50);
+quantity number;
+exp_date date;
+shelf_num number;
+begin
+med_name:='&medicine_name';
+rate:='&price';
+batch_id:='&batch_id';
+quantity:='&quantity';
+exp_date:='&expiry_date';
+shelf_num:='&shelf_number';
+med_info(med_name,rate);
+pharmacy(batch_id,quantity,exp_date,shelf_num);
+end;
+----------------------------------------------------------------------
+
+
+med_id number constraint md_fk references med_info_480091(med_id),
+batch_id varchar2(50) not null,
+quantity number(10) not null,
+exp_date date not null,
+shelf_num number(10) not null,
+
+
+------------------------------------------------------------------
+
+
+create or replace procedure pharmacy(v_id,batch_id varchar2,quantity number,exp_date date,shelf_num number)
+is
+shelf_num_exc exception;
+exp_date_exc exception;
+quantity_exc exception;
+batch_id_exc exception;
+flag number:=0;
+cursor cur_exp is
+select exp_date from medicine_details_480091 where med_id=v_id;
+v_expiry cur_exp%rowtype;
+begin
+loop
+fetch cur_exp into v_expiry;
+exit when cur_exp%notfound;
+if(v_expiry=exp_date) then 
+flag:=1;
+exit;
+end if;
+end loop;
+close cur_exp;
+
+
+if flag=1 then
+
+if(batch_id is not null) then
+if(quantity is not null) then
+if(exp_date is not null and exp_date>sysdate) then
+if(shelf_num is not null) then
+				update table medicine_details_480091 values(v_id,batch_id,quantity,exp_date,shelf_num) ;
+			else 
+				raise shelf_num_exc;
+			end if;
+		else 
+			raise exp_date_exc;
+		end if;
+	else 
+		raise quantity_exc;	
+	end if;		
+else
+	raise batch_id_exc;
+end if;
+
+
+
+exception
+
+when shelf_num_exc then
+  dbms_output.put_line('Enter valid shelf number');
+ when exp_date_exc then
+  dbms_output.put_line('Enter valid expiry date');
+when quantity_exc then
+  dbms_output.put_line('Enter valid number for quantity');
+when batch_id_exc then
+  dbms_output.put_line('Enter valid batch id');
+end;
+
+
+
+
+---------------------------------------
+
+create or replace function batch_generate(exp_date in date)
+return varchar2 is
+exp_date date;
+batch varchar2(70);
+date_change varchar2(50);
+begin
+date_change:=to_char(exp_date);
+batch:='sq_batch.nextval || _ || exp_date';
+return(batch);
+end;
+
+---------------------------
+
+declare
+batch varchar2(70);
+exp_date:='12-sep-1994';
+begin
+batch:=batch_generate(exp_date,batch);
+end;
+
+-----------------------------------------------------------
+
+
+create or replace procedure stock_hist(quantity number)
+is
+quantity_exc exception;
+begin
+
+if(quantity is not null) then
+	
+	insert into med_stock_480091 values(sq_sd.currval,quantity,sysdate);
+else
+	rasie quantity_exc;
+end if;
+
+exception
+
+
+when quantity_exc then
+  dbms_output.put_line('Enter valid number for quantity');
+
+end;
+
+--------------------------------------------------------------
+
+create table alternate_info(
+ 
+)

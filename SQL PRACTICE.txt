@@ -1,0 +1,131 @@
+
+Theater details-1
+1.SELECT M.MOVIE_ID,M.MOVIE_NAME,B.PERSON_BOOKED FROM MOVIE_DETAILS M,BOOKING B WHERE M.MOVIE_ID=B.MOVIE_ID;
+2.SELECT M.MOVIE_ID,M.MOVIE_NAME FROM MOVIE_DETAILS M WHERE M.MOVIE_ID NOT IN(SELECT B.MOVIE_ID FROM BOOKING B WHERE M.MOVIE_ID=B.MOVIE_ID);
+3.SELECT COUNT(MOVIE_NAME),LANGUAGE FROM MOVIE_DETAILS GROUP BY LANGUAGE;
+4 select movie_name from movie_details where movie_id=(select movie_id from booking group by movie_id having
+sum(no_of_tickets)=(select max(sum(no_of_tickets)) from booking group by movie_id));
+5.SELECT B.MOVIE_ID,S.SHOW_ID,S.SHOW_NAME,S.SHOW_TIME FROM BOOKING B,SHOW S WHERE B.SHOW_ID=S.SHOW_ID AND PERSON_BOOKED='Vikram';
+6.select b.movie_id,m.movie_name,m.language,m.genre,m.duration,sum(no_of_tickets) "Total tickets sold" from movie_details m,booking b where m.movie_id=b.movie_id group by b.movie_id,m.movie_name,m.language,m.genre,m.duration;
+7.select count(b.theatre_id), t.theatre_name from  booking b,theatre t
+where b.theatre_id=t.theatre_id group by rollup(b.theatre_id,t.theatre_name);
+
+
+
+
+
+
+Theatre details-2
+1.Display total number of movies booked in the morning sahow in all theaters?
+SELECT COUNT(M.MOVIE_NAME) FROM BOOKING B, SHOW S,Movie_details M WHERE B.SHOW_ID=S.SHOW_ID AND M.MOVIE_ID=B.MOVIE_ID AND S.SHOW_NAME='Morning show';
+2.select theatre_name from  theatre  where  theatre_id =(select  theatre_id from booking group by  theatre_id having
+sum(no_of_tickets)=(select max(sum(no_of_tickets)) from booking group by theatre_id));
+3.SELECT B  .BOOKING_DATE,M.MOVIE_NAME FROM MOVIE_DETAILS M ,BOOKING B WHERE B.MOVIE_ID=M.MOVIE_ID AND B.BOOKING_DATE>'15-JUL-2013' ORDER BY BOOKING_DATE;
+4.SELECT DISTINCT(M.MOVIE_NAME),T.THEATRE_NAME FROM BOOKING B,MOVIE_DETAILS M,THEATRE T WHERE B.MOVIE_ID=M.MOVIE_ID AND B.THEATRE_ID=T.THEATRE_ID AND MOVIE_NAME=.
+5.SELECT * FROM BOOKING WHERE BOOKING_DATE IN(SELECT B.BOOKING_DATE FROM BOOKING B,MOVIE_DETAILS M WHERE B.MOVIE_ID=M.MOVIE_ID AND M.MOVIE_NAME='30 Minutes or Less');
+6.SELECT COUNT(B.SHOW_ID),T.THEATRE_NAME FROM BOOKING B,THEATRE T WHERE  B.THEATRE_ID=T.THEATRE_ID GROUP BY B.THEATRE_ID,T.THEATRE_NAME;
+8.SELECT * FROM THEATRE WHERE THEATRE_ID NOT IN (SELECT B.THEATRE_ID FROM BOOKING B);
+
+
+
+
+DELETING ROWS Syntax: DELETE [FROM] <table-name> WHERE <condition>; From is an optional keyword. Omitting the where clause will delete all rows from the table. You have to commit or rollback if the autocommit is not set to true.
+TRUNCATING A TABLE Syntax: TRUNCATE TABLE <TABLENAME>
+Note : Removes all the rows from table. Deleting specified rows is not possible. Once the table is truncated, it automatically commits. It is a DDL statement.
+DROPPING A TABLE OR REMOVING A TABLE Syntax: DROP TABLE <TABLENAME>
+Note : Table is dropped permanently. It is a DDL statement. It removes the data along with table definitions and the table
+
+
+check
+Defines the condition that should be satisfied before insertion and updating is done. Defines a condition that each row must satisfy The following expressions are not allowed
+o References to CURRVAL, NEXTVAL and ROWNUM pseudocolumns
+o Calls to SYSDATE,UID,USER functions
+o Queries that refer to other values in other rows
+Note: - Pseudocolumns are not actual columns in a table but they behave like columns. For example, you can select values from pseudocolumns. However, you cannot insert into, update, or delete from a pseudocolumn.
+
+
+
+SEQUENCE OBJECT
+Used to generate sequence(Unique) Integers for use of primary keys. Syntax: CREATE SEQUENCE sequence [INCREMENT BY n] [START WITH n] [{MAXVALUE n | NOMAXVALUE}] [{MINVALUE n | NOMINVALUE}] [{CYCLE | NOCYCLE}] [{CACHE n | NOCACHE}];
+Sequence is the name of the sequence generator
+INCREMENT BY n specifies the interval between sequence numbers where n is an integer (If this clause is omitted, the sequence increments by 1.)
+START WITH n specifies the first sequence number to be generated (If this clause is omitted, the sequence starts with 1.)
+MAXVALUE n specifies the maximum value the sequence can generate N
+NOMAXVALUE specifies a maximum value of 10^27 for an ascending sequence and –1 for a descending sequence (This is the default option.)
+MINVALUE n specifies the minimum sequence value
+NOMINVALUE specifies a minimum value of 1 for an ascending sequence and – (10^26) for a descending sequence (This is the default option.)
+CYCLE | NOCYCLE specifies whether the sequence continues to generate values after reaching its maximum or minimum value (NOCYCLE is the default Option.)
+
+
+
+Every oracle database is associated with an Oracle Instance. Every time a database is started, a memory area called System Global Area (SGA) or Shared Global Area is allocated and one or more processes are started.
+The combination of SGA and Oracle processes is called as Oracle Instance. SGA consists of several memory structures: The shared pool is used to store the most recently executed SQL statements and the most recently used data from the data dictionary. These SQL statements may be submitted by a user process or, in the case of stored procedures, read from the data dictionary. The database buffer cache is used to store the most recently used data. The data is read from, and written to, the data files. The redo log buffer is used to track changes made to the database by the server and background processes.
+
+
+
+---------------------------
+
+
+
+--------------------------------------SCHEMA FOR WE CARE-------------------------------- 
+SYNTAX FOR SLOT TABLE
+
+create table slots_details(slot_no number(5) primary key,price_perhour number(8,2)); 
+
+
+SYNTAX FOR FOOD DETAILS 
+
+CREATE TABLE FOOD_DETAIL(FOOD_ID NUMBER(5) PRIMARY KEY,FOOD_NAME VARCHAR(20) NOT NULL,FOOD_PRICE NUMBER(5,2));
+
+
+SYNTAX FOR PARENT TABLE
+
+CREATE TABLE PARENT_WECARECOMPANY(PARENT_ID NUMBER(5) PRIMARY KEY,PARENT_NAME VARCHAR2(50) NOT NULL ,ADDRESS VARCHAR(60),
+PHONE NUMBER(12),OFFICE_ADDRESS VARCHAR(30), RES_ADDRESS VARCHAR(30))
+
+SYNATAX FOR MAIN TABLE 
+
+CREATE TABLE WECARECOMPANY(CHILD_ID NUMBER(5) PRIMARY KEY,CHILD_NAME VARCHAR(50) NOT NULL,PARENT_ID NUMBER(5)
+ REFERENCES PARENT_WECARE(PARENT_ID),SLOT_NO NUMBER(5) REFERENCES SLOTS_DETAILS(SLOT_NO),FOOD_ID NUMBER(5)
+ REFERENCES FOOD_DETAIL(FOOD_ID),no_of_hours number(6,2),GRANDAMOUNT NUMBER(6,2));
+
+
+NOTE: YOU CAN EVEN ADD THE CONSTRAINTS NAMES FOR THE ABOVE DECLARED SYNTAX USING ALTER IT WILL BE EASY FOR ADDING
+OR REMOVING THE CONSTRAINTS SPECIFICATION ON THE TABLE (NOT NULL,PRIMARY KEY,FORIEGN KEY)
+
+NOTE 2:
+************SLOT_NO NUMBER(5) REFERENCES SLOTs_DETAILS(SLOT_NO)*************
+THIS SYNTAX IS USED TO CREATE THE FORIEGN KEY ,BUT PLEASE DO NOTE THAT BEFORE RAISING THE SYNTAX MAKE SURE THAT
+THE PARENT TABLE IS ALREADY EXISTING(IN THE ABOVE TABLE SLOTs_DETAILS IS THE PARENT TABLE SO FIRST WE CREATED SLOT TABLE)
+
+NOTE 3:
+YOU CAN EVEN ADD THE FOREIGN KEY CONSTRAINT USING ALTER COMMAND IF YOU FORGOT DURING THE CREATION TIME
+
+************************************************THANK YOU**********************************************
+
+
+
+
+
+create table parent8088
+(p_id number(20) constraint p1_parent8088_pid PRIMARY KEY,
+p_name char(20) constraint p2_parent8088_pname NOT NULL,
+p_mobnum number(10)  constraint p3_parent8088_pmobno UNIQUE,
+p_office_address varchar2(40),
+p_home_address varchar2(40) constraint p4_parent8088_homeadd NOT NULL);
+
+
+create table child8088
+(c_id number(20) references parent8088(p_id),
+c_name char(20) NOT NULL,
+c_timeslot number(20) NOT NULL);
+
+
+
+create table care_facilities8088
+
+(we_charid number(20) references parent8088(p_id),
+food_facility char(1) check(Upper(food_facility)IN('Y','N'));
+charges_per_hour number(20),
+play_zone char(1) check(upper(play_zone)in ('Y','N'));
+

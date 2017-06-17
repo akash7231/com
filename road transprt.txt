@@ -1,0 +1,29 @@
+1. A road transport office keeps the information of the all vehicles and persons who owns the vehicles. It also keeps the records of their accidents. Each person can own one or more cars. It also maintains the accident information about the cars like date of accident, damage amount, insurance claimed or not, insurance amount etc. One car can undergo more than one accident.Identify required tables, columns and their relationship to represent the above information. Write the SQL commands to represent the schema (tables) in the database.
+
+ANS)  
+
+create table vehicle
+ (
+               vehicle_id number(8) constraint pk_vehicle_vehicle_id primary key,
+               vehicle_type varchar2(9) ,
+               vehicle_ownerid varchar2(8), constraint fk foreign_key(vehicle_ownerid) references person(vehicle_ownerid),
+               vehicle_name varchar2(8)
+  );
+   
+create table person
+(
+ vehicle_ownerid varchar(8) constraint prk_person_person_id primary key,
+ person_name varchar2(8),
+ address varchar2(8) ,
+contact_no number(9)
+);
+
+create table accident_info
+(
+accident_id number(9) constraint pkey_accident_info_accident_id primary key,
+date_of_accident DATE ,
+damage_amount number(8),
+vehicle_id number(8) ,constraint f_k foreign key(vehicle_id) references vehicle(vehicle_id),
+insurance_claimed constraint chk_accident_info_insurance_claimed check(insurance_claimed in('Y','N')),
+insurance amount number(8)
+);
